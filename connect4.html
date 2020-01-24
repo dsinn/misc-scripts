@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Generalized Connect Four</title>
+<style type="text/css">
+body {
+    font-family: Arial;
+}
+th[scope='row'] {
+    font-weight: normal;
+    text-align: right;
+}
+th[scope='row']:after {
+    content: ':';
+}
+.tinyint {
+    width: 2em;
+}
+
+#games {
+    list-style-type: none;
+    padding-left: 0;
+}
+#games li {
+    margin: 1em 0;
+}
+
+.game {
+    border-collapse: collapse;
+    text-align: center;
+}
+.game td {
+    border: 1px solid black;
+    height: 2em;
+    vertical-align: middle;
+    width: 2em;
+}
+.game td div {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+}
+
+.colorpreview {
+    border-radius: 50%;
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+}
+</style>
+<script type="text/javascript">
+//<![CDATA[
+document.addEventListener('DOMContentLoaded', function() {
+'use strict';
+
+// Initialize globals
+var color1 = document.getElementById('color1');
+var color2 = document.getElementById('color2');
+var color1preview = document.getElementById('color1preview');
+var color2preview = document.getElementById('color2preview');
+var games = document.getElementById('games');
+var height = document.getElementById('height');
+var width = document.getElementById('width');
+var winLength = document.getElementById('winlength');
+
+color1.addEventListener('keyup', function() {
+    color1preview.style.backgroundColor = color1.value;
+});
+color2.addEventListener('keyup', function() {
+    color2preview.style.backgroundColor = color2.value;
+});
+
+document.getElementById('newgame').addEventListener('click', function() {
+    color1.value = color1.value.replace(/\s/g, '').toLowerCase();
+    color2.value = color2.value.replace(/\s/g, '').toLowerCase();
+    if (color1.value === color2.value) {
+        return window.alert('Both players cannot have the same color.');
+    }
+    
+    var heightValue = parseNumInput(height);
+    var widthValue = parseNumInput(width);
+    var winLengthValue = parseNumInput(winLength);
+    if (winLengthValue < 2) {
+        return window.alert('Invalid win length.');
+    }
+    if (winLengthValue > widthValue && winLengthValue > heightValue) {
+        return window.alert('Win length exceeds both height and width, so nobody can win.');
+    }
+
+    var li = document.createElement('li');
+    li.appendChild(new Game(widthValue, heightValue, winLengthValue, [color1.value, color2.value]).getTable());
+    games.appendChild(li);
+});
+
+function parseNumInput(inputElem) {
+    inputElem.value = inputElem.value.replace(/\D/g, '');
+    if (!inputElem.value || inputElem.value < 1) {
+        inputElem.value = inputElem.defaultValue;
+    }
+    return parseInt(inputElem.value, 10);
+}
+
+function Game(width, height, winLength, players) {
+    this.buttons = [];
+    this.caption = null;
+    this.count = 0;
+    this.currentRow = [];
+    this.height = height;
+    this.maxCount = width * height;
+    this.minCount = winLength * 2 - 1;
+    this.players = players;
+    this.table = document.createElement('table');
+    this.tbody = null;
+    this.turn = 0;
+    this.width = width;
+    this.winLength = winLength;
+
+    var i, j, tr;
+
+    this.table.className = 'game';
+    this.caption = document.createElement('caption');
+    this.table.appendChild(this.caption);
+    this.updateTurnText();
+
+    // Inputs
+    this.table.createTHead();
+    tr = this.table.tHead.insertRow(-1);
+    for (j = 0; j < width; j++) {
+        this.currentRow.push(height - 1);
+
+        var th = document.createElement('th');
+        th.scope = 'col';
+        tr.appendChild(th);
+
+        var button = document.createElement('input');
+        button.type = 'button';
+        button.value = '\u2022';
+        th.appendChild(button);
+        this.buttons.push(button);
+    }
+
+    var that = this;
+    tr.addEventListener('click', function(event) {
+        if (event.target.tagName === 'INPUT') {
+            that.addToColumn(that.buttons.indexOf(event.target));
+        }
+    });
+
+    // Disc slots
+    this.tbody = document.createElement('tbody');
+    this.table.appendChild(this.tbody);
+    for (i = 0; i < height; i++) {
+        tr = this.table.tBodies[0].insertRow(-1);
+        for (j = 0; j < width; j++) {
+            tr.insertCell(j);
+        }
+    }
+}
+
+Game.prototype.getTable = function() {
+    return this.table;
+};
+
+Game.prototype.getTurnColor = function() {
+    return this.players[this.turn];
+};
+Game.prototype.getTurnPlayer = function() {
+    return this.turn + 1;
+};
+
+Game.prototype.updateTurnText = function() {
+    this.caption.innerHTML = 'Turn: <span style="color:' + this.getTurnColor() + '">Player ' + this.getTurnPlayer() + '</span>';
+};
+
+Game.prototype.addToColumn = function(j) {
+    if (this.buttons[j].disabled) {
+        return;
+    }
+
+    this.count++;
+
+    var i = this.currentRow[j];
+
+    var disc = document.createElement('div');
+    disc.style.backgroundColor = this.getTurnColor();
+    this.tbody.rows[i].cells[j].appendChild(disc);
+
+    if (this.count >= this.minCount && this.checkWin(i, j)) {
+        return this.endGame(true);
+    }
+
+    if (this.count >= this.maxCount) {
+        return this.endGame(false);
+    }
+
+    this.currentRow[j]--;
+    if (this.currentRow[j] < 0) {
+        this.buttons[j].disabled = true;
+    }
+
+    this.turn = (this.turn + 1) % this.players.length;
+    this.updateTurnText();
+};
+
+Game.prototype.checkWin = function(i, j) {
+    // There is a way that's better than checking eight directions on each addition.
+    var length, x, y;
+    var color = this.getColor(i, j);
+
+    length = 1;
+    // Down
+    for (y = i + 1; y < this.height && color === this.getColor(y, j); y++) {
+        if (++length >= this.winLength) {
+            return true;
+        }
+    }
+
+    length = 1;
+    // Left
+    for (x = j - 1; x >= 0 && color === this.getColor(i, x); x--) {
+        if (++length >= this.winLength) {
+            return true;
+        }
+    }
+    // Right
+    for (x = j + 1; x < this.width && color === this.getColor(i, x); x++) {
+        if (++length >= this.winLength) {
+            return true;
+        }
+    }
+
+    length = 1;
+    // Top-left
+    for (y = i - 1, x = j - 1; y >= 0 && x >= 0 && color === this.getColor(y, x); x--, y--) {
+        if (++length >= this.winLength) {
+            return true;
+        }
+    }
+    // Bottom-right
+    for (y = i + 1, x = j + 1; y < this.height && x < this.width && color === this.getColor(y, x); x++, y++) {
+        if (++length >= this.winLength) {
+            return true;
+        }
+    }
+
+    length = 1;
+    // Top-right
+    for (y = i - 1, x = j + 1; y >= 0 && x < this.width && color === this.getColor(y, x); x++, y--) {
+        if (++length >= this.winLength) {
+            return true;
+        }
+    }
+    // Bottom-left
+    for (y = i + 1, x = j - 1; y < this.height && x >= 0 && color === this.getColor(y, x); x--, y++) {
+        if (++length >= this.winLength) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+Game.prototype.getColor = function(i, j) {
+    if (!this.tbody.rows[i].cells[j].firstChild) {
+        return null;
+    }
+    return this.tbody.rows[i].cells[j].firstChild.style.backgroundColor;
+};
+
+Game.prototype.endGame = function(winnerExists) {
+    this.buttons.forEach(function(button) {
+        button.disabled = true;
+    });
+
+    if (winnerExists) {
+        this.caption.innerHTML = 'Player ' + this.getTurnPlayer() + ' wins!';
+    } else {
+        this.caption.innerHTML = 'There is no winner (i.e., both of you lose).';
+    }
+};
+
+});
+//]]>
+</script>
+</head>
+<body>
+    <table>
+        <tr>
+            <th scope="row">Width</th>
+            <td><input type="text" id="width" class="tinyint" value="7" /></td>
+        </tr>
+        <tr>
+            <th scope="row">Height</th>
+            <td><input type="text" id="height" class="tinyint" value="6" /></td>
+        </tr>
+        <tr>
+            <th scope="row">Win length</th>
+            <td><input type="text" id="winlength" class="tinyint" value="4" /></td>
+        </tr>
+        <tr>
+            <th scope="row">Player 1 color</th>
+            <td><input type="text" id="color1" value="red" /> <div id="color1preview" class="colorpreview" style="background-color: red"></div></td>
+        </tr>
+        <tr>
+            <th scope="row">Player 2 color</th>
+            <td><input type="text" id="color2" value="black" /> <div id="color2preview" class="colorpreview" style="background-color: black"></div></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center"><input type="button" id="newgame" value="New Game" /></td>
+        </tr>
+    </table>
+    <ul id="games"></ul>
+</body>
+</html>

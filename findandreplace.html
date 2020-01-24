@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>JavaScript Find &amp; Replace Tool</title>
+<style type="text/css">
+body {
+    background-color: black;
+    color: white;
+    font-family: Arial;
+}
+button em {
+	color: blue;
+	font-style: normal;
+}
+table {
+    width: 100%;
+}
+textarea {
+    height: 25em;
+    width: 100%;
+}
+textarea[readonly=readonly] {
+    background-color: lightgrey;
+}
+ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+#regexes td {
+	padding: 0 0.2em;
+}
+#regexes td:first-child,
+#regexes td:first-child + td + td {
+	width: 49%;
+}
+#regexes td:last-child {
+	min-width: 1em;
+}
+#regexes input[type=text] {
+	font-family: Courier New;
+	width: 100%;
+}
+#regexes input[type=button] {
+	text-align: center;
+	min-width: 1em;
+}
+#regexes td:first-child + td {
+	min-width: 3em;
+}
+
+#ta_container td {
+    padding: 0.2em;
+}
+</style>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    'use strict';
+
+    var tableRegex;
+    var taInput, taOutput;
+
+    tableRegex = document.getElementById('regexes');
+    taInput = document.getElementById('taInput');
+    taOutput = document.getElementById('taOutput');
+
+    document.getElementById('add').addEventListener('click', add);
+    document.getElementById('exec').addEventListener('click', execute);
+    tableRegex.addEventListener('click', function(evt) {
+        if (evt.target.type && evt.target.type === 'button') {
+            var table = evt.currentTarget;
+            var numRows = table.rows.length;
+            var tr = evt.target.parentNode.parentNode;
+            for (var i = 1; i < numRows; i++) {
+                if (tr === table.rows[i]) {
+                    evt.currentTarget.deleteRow(i);
+                    break;
+                }
+            }
+        }
+    });
+    taOutput.addEventListener('click', function(evt) {
+        evt.currentTarget.focus();
+        evt.currentTarget.select();
+    });
+
+    taInput.focus();
+    add();
+
+	function escapeNewLine(s) {
+		return s.replace(/(?:([^\\])\\n|^\\n)/g, '$1\n')
+				.replace(/(?:([^\\])\\n|^\\n)/g, '$1\n');
+	}
+
+	function execute() {
+		taOutput.value = '[Error with regular expression]';
+		var s = taInput.value;
+
+		var numRows = tableRegex.rows.length;
+		for (var i = 1; i < numRows; i++) {
+			var tr = tableRegex.rows[i];
+			var pattern = escapeNewLine(tr.cells[0].firstChild.value);
+			var options = tr.cells[1].firstChild.value;
+			var replacement = escapeNewLine(tr.cells[2].firstChild.value);
+			var regex = new RegExp(pattern, options);
+			s = s.replace(regex, replacement);
+		}
+
+		taOutput.value = s;
+	}
+
+	function add() {
+		var tr = tableRegex.insertRow(-1);
+        var td, input;
+		for (var i = 0; i < 3; i++) {
+			td = tr.insertCell(i);
+			input = document.createElement('input');
+			input.type = 'text';
+			td.appendChild(input);
+		}
+
+		td = tr.insertCell(-1);
+		input = document.createElement('input');
+		input.type = 'button';
+		input.value = '\u2212';
+		td.appendChild(input);
+	}
+});
+</script>
+</head>
+<body>
+<h1>JavaScript Find &amp; Replace Tool</h1>
+<table id="regexes">
+	<tr>
+		<th>Pattern</th>
+		<th>Flags</th>
+		<th>Replacement</th>
+		<th></th>
+	</tr>
+</table>
+
+<ul>
+	<li><button id="add" accesskey="a"><em>A</em>dd replacement</button></li>
+	<li><button id="exec" accesskey="e"><em>E</em>xecute</button></li>
+</ul>
+
+<table id="ta_container">
+    <tr>
+        <td>Input</td>
+        <td>Output</td>
+    </tr>
+    <tr>
+        <td><textarea id="taInput" rows="25" cols="80"></textarea></td>
+        <td><textarea id="taOutput" rows="25" cols="80" readonly="readonly"></textarea></td>
+    </tr>
+</table>
+
+<div>
+	Tool in a nutshell:
+	<div><code>output = input.replace(new RegExp(pattern, flags), replacement);</code></div>
+</div>
+<ul>
+	<li><a href="http://www.javascriptkit.com/jsref/regexp.shtml" title="JavaScript Kit- RegExp (regular expression) object">JavaScript regex examples</a></li>
+</ul>
+</body>
+</html>

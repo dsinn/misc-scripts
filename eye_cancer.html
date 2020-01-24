@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>_,.Virtual..)(..Flame., ~( Override )</title>
+		<meta charset="UTF-8" />
+		<style>
+body {
+	background-color: black;
+	font-family: sans-serif;
+	overflow-y: hidden;
+}
+.template {
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-image: -webkit-linear-gradient(left, #ebc11b 0%, red 20%, #e3993e 40%, red 50%, #e3993e 60%, #e3993e 100%);
+	display: inline-block;
+	font-style: italic;
+	font-weight: bold;
+	margin-left: 1em;
+}
+.f1 {
+    -webkit-animation: fade 2s infinite;
+    -moz-animation: fade 2s infinite;
+    -o-animation: fade 2s infinite;
+    animation: fade 2s infinite;
+}
+.f2 {
+    -webkit-animation: fade 1.4s infinite;
+    -moz-animation: fade 1.4s infinite;
+    -o-animation: fade 1.4s infinite;
+    animation: fade 1.4s infinite;
+}
+.f4 {
+    -webkit-animation: fade 0.7s infinite;
+    -moz-animation: fade 0.7s infinite;
+    -o-animation: fade 0.7s infinite;
+    animation: fade 0.7s infinite;
+}
+.f5 {
+    -webkit-animation: fade 0.5s infinite;
+    -moz-animation: fade 0.5s infinite;
+    -o-animation: fade 0.5s infinite;
+    animation: fade 0.5s infinite;
+}
+@keyframes fade {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes fade{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes fade{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes fade{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+		</style>
+	</head>
+	<body>
+		<div><div class="template"><span class="f2">_</span><span class="f4">,</span><span class="f5">.</span><span class="f1">V</span>i<span class="f1">rtual</span><span class="f2">.</span><span class="f3">.</span><span class="f6">)(</span><span class="f3">.</span><span class="f2">.</span><span class="f1">Fl</span>am<span class="f1">e</span><span class="f5">.</span><span class="f4">,</span> <span class="f2">~</span><span class="f1">(</span> Override <span class="f1">)</span></div></div>
+		<script>
+(() => {
+	const template = document.getElementsByClassName('template')[0];
+	let count = 0;
+	let clone;
+	do {
+		clone = template.cloneNode(true);
+		template.parentNode.appendChild(clone);
+	} while (clone.getBoundingClientRect().top < window.innerHeight && count++ < 1000);
+})();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Annoying</title>
+<style type="text/css">
+body {
+    background-color: black;
+    color: white;
+    font-family: Verdana;
+    font-size: small;
+}
+td {
+    font-size: small;
+    vertical-align: middle;
+}
+textarea {
+    font-family: Verdana;
+    font-size: small;
+}
+textarea[readonly] {
+    background-color: lightgrey;
+}
+
+#select {
+    float: left;
+}
+</style>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+'use strict';
+
+var select, output;
+
+var funcs = {
+
+    'Alternating caps': function(input) {
+        return input.replace(/(^^|[a-z])([^a-z]*)([a-z]|$)/gi, function(m, first, middle, second) {
+            return first.toUpperCase() + middle + second.toLowerCase();
+        });
+    },
+
+    'Duplicate characters': function(input) {
+        return input.replace(/([A-Za-z])/g, '$1$1');
+    },
+
+    'Rearrange middle characters': function(input) {
+        return input.replace(/([a-z])([a-z]{2,})([a-z])(?![a-z])/gi, function(m, first, middle, last) {
+            if (/^(.)\1+$/.test(middle)) {
+                return m;
+            }
+
+            var length = middle.length;
+            if (length === 2) {
+                return first + middle.charAt(1) + middle.charAt(0) + last;
+            }
+
+            var scrambled = middle;
+            var chars = middle.split('');
+            while (scrambled === middle) {
+                scrambled = '';
+                var charsLeft = chars.slice();
+                var tempLength = length;
+                while (charsLeft.length) {
+                    scrambled += charsLeft.splice(Math.floor(Math.random() * tempLength--), 1);
+                }
+            }
+
+            return first + scrambled + last;
+        });
+    },
+
+    'Reverse characters': function(input) {
+        return input.split('').reverse().join('');
+    }
+
+};
+
+function process() {
+    var str = document.getElementById('input').value;
+
+    var label;
+    for (var i = 0; (label = select.options[i].value); i++) {
+        str = funcs[label](str);
+    }
+
+    document.getElementById('output').value = str;
+}
+
+function selectAll(elem) {
+    process(output);
+    elem.focus();
+    elem.select();
+}
+
+function swap(direction) {
+    var i = select.selectedIndex;
+    var j = i + direction / Math.abs(direction);
+    if (select.options[j] !== undefined) {
+        var a = select.options[Math.min(i, j)];
+        var b = select.options[Math.max(i, j)];
+        select.removeChild(b);
+        select.insertBefore(b, a);
+    }
+}
+
+select = document.getElementById('select');
+output = document.getElementById('output');
+
+select.style.height = ((Object.keys(funcs).length + 1) * 1.3) + 'em';
+console.log(((funcs.length + 1) * 1.3) + 'em');
+for (var label in funcs) {
+    if (funcs.hasOwnProperty(label)) {
+        var option = document.createElement('option');
+        select.insertBefore(option, select.lastChild);
+        option.value = label;
+        option.appendChild(document.createTextNode(label));
+    }
+}
+
+document.getElementById('input').addEventListener('keyup', process);
+output.addEventListener('click', function(evt) {
+    selectAll(evt.currentTarget);
+});
+document.getElementById('up').addEventListener('click', function() {
+    swap(-1);
+    process();
+});
+document.getElementById('down').addEventListener('click', function() {
+    swap(1);
+    process();
+});
+
+});
+</script>
+</head>
+
+<body>
+
+<noscript><div>JavaScript must be enabled.</div></noscript>
+
+<table>
+    <tr>
+        <td>Input:</td>
+        <td>
+            <textarea id="input" cols="80" rows="12"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td>Output:</td>
+        <td>
+            <textarea id="output" class="output" cols="80" rows="12" readonly></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td>Order:</td>
+        <td>
+            <select multiple id="select"><option value="">*STOP*</option></select>
+            <div><input type="button" id="up" value="&uarr;"></div>
+            <div><input type="button" id="down" value="&darr;"></div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

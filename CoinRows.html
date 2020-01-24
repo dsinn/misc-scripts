@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Sandbox</title>
+<script type="text/javascript">
+function CoinRows(canvas, radius) {
+    this.context = canvas.getContext('2d');
+    if (!this.context) {
+        window.alert('Canvas is incompatible with your browser.');
+    } else {
+        this.radius = radius;
+        this.canvas = canvas;
+        this.xOffset = this.radius;
+        this.yOffset = 1;
+        this.currentRowDepth = 0;
+        this.diam = this.radius * 2;
+        this.rowHeight = Math.cos(Math.PI / 6) * this.diam;
+    }
+}
+
+/**
+ * Draw the coin rows according to the given monotonically decreasing array.
+ */
+CoinRows.prototype.draw = function(a) {
+    var rows = a.length;
+    this.currentRowDepth = Math.max(rows, this.currentRowDepth);
+    
+    if (a[0] * this.diam > this.canvas.width) {
+        window.alert('Canvas element is not wide enough to draw this.');
+    } else if (this.xOffset + a[0] * this.diam > this.canvas.width) {
+        window.alert(this.yOffset);
+        this.yOffset += this.diam * (this.currentRowDepth + 1);
+        this.xOffset = this.radius;
+        this.currentRowDepth = 0;
+    }
+    
+    for (var i = 0; i < rows; i++) {
+        var y = this.radius + (rows - 1 - i) * this.rowHeight;
+        for (var j = 0; j < a[i]; j++) {
+            this.context.beginPath();
+            this.context.arc(this.xOffset + (i * 0.5 + j) * this.diam,
+                    y + this.yOffset, this.radius, 0, 2*Math.PI, true);
+            this.context.stroke();
+        }
+    }
+    this.xOffset += (a[0] + 1) * this.diam;
+}
+
+window.onload = function() {
+    var cr = new CoinRows(document.getElementById('canvas'), 16);
+    cr.draw([7]);
+    cr.draw([6, 1]);
+    cr.draw([5, 2]);
+    cr.draw([4, 3]);
+    cr.draw([4, 2, 1]);
+}
+</script>
+</head>
+
+<body>
+<canvas id="canvas" width="1152" height="864"></canvas>
+</body>
+</html>

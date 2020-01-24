@@ -1,0 +1,862 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>HTML Character Entity Reference</title>
+
+<style type="text/css">
+body {
+    background-color: black;
+    color: white;
+}
+td.character {
+    background-color: white;
+    color: black;
+    text-align: center;
+}
+a {
+    color: cyan;
+}
+a:active {
+    color: blue;
+}
+a:hover {
+    color: yellow;
+}
+a:visited {
+    color: cyan;
+}
+
+.shade {
+    background-color: red;
+}
+
+#charTable {
+    border-collapse: collapse;
+    border-right: none;
+}
+#charTable td,
+#charTable th {
+    border: 1px solid silver;
+    padding: 0.3em;
+}
+
+#hexcaps {
+    padding: 0;
+}
+
+.settings {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: inherit;
+    border: 1px solid white;
+}
+.settings .toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.settings.hidden {
+    display: block;
+}
+.settings.hidden .toggle {
+    display: inline;
+    position: static;
+}
+.settings.hidden * {
+    display: none;
+}
+
+.settings table {
+    margin-bottom: 1em;
+}
+
+#notes {
+    margin-top: 1em;
+}
+
+.hidenonentityrefs .nonentityref {
+    display: none;
+}
+.hidden {
+    display: none;
+}
+.toggle:before {
+    content: '[hide]';
+}
+.hidden .toggle:before {
+    content: '[show]';
+}
+</style>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+'use strict';
+
+// Configurable variables
+/** What to display when a character lacks an HTML entity. */
+var NO_ENTITY_PLACEHOLDER = 'n/a';
+
+/** Preset fonts for the select element. */
+var fonts = [
+    'Arial',
+    'Arial Unicode MS',
+    'Courier New',
+    'Fixedsys',
+    'Lucida Sans Unicode',
+    'Times New Roman',
+    'Verdana'
+];
+
+/** Character data.  Value is in decimal. */
+var chars = {
+34: {html: 'quot', desc: 'quotation mark'},
+38: {html: 'amp', desc: 'ampersand'},
+60: {html: 'lt', desc: 'less-than'},
+62: {html: 'gt', desc: 'greater-than'},
+160: {html: 'nbsp', desc: 'no-break space'},
+161: {html: 'iexcl', desc: 'inverted exclamation mark'},
+162: {html: 'cent', desc: 'cent sign'},
+163: {html: 'pound', desc: 'pound sterling sign'},
+164: {html: 'curren', desc: 'general currency sign'},
+165: {html: 'yen', desc: 'yen sign'},
+166: {html: 'brvbar', desc: 'broken (vertical) bar'},
+167: {html: 'sect', desc: 'section sign'},
+168: {html: 'uml', desc: 'umlaut, dieresis'},
+169: {html: 'copy', desc: 'copyright sign'},
+170: {html: 'ordf', desc: 'ordinal indicator, feminine'},
+171: {html: 'laquo', desc: 'angle quotation mark, left'},
+172: {html: 'not', desc: 'not sign'},
+173: {html: 'shy', desc: 'soft hyphen'},
+174: {html: 'reg', desc: 'registered sign'},
+175: {html: 'macr', desc: 'macron'},
+176: {html: 'deg', desc: 'degree sign'},
+177: {html: 'plusmn', desc: 'plus-or-minus sign'},
+178: {html: 'sup2', desc: 'superscript two'},
+179: {html: 'sup3', desc: 'superscript three'},
+180: {html: 'acute', desc: 'acute accent'},
+181: {html: 'micro', desc: 'micro sign'},
+182: {html: 'para', desc: 'pilcrow, paragraph sign'},
+183: {html: 'middot', desc: 'middle dot'},
+184: {html: 'cedil', desc: 'cedilla'},
+185: {html: 'sup1', desc: 'superscript one'},
+186: {html: 'ordm', desc: 'ordinal indicator, masculine'},
+187: {html: 'raquo', desc: 'angle quotation mark, right'},
+188: {html: 'frac14', desc: 'fraction one-quarter'},
+189: {html: 'frac12', desc: 'fraction one-half'},
+190: {html: 'frac34', desc: 'fraction three-quarters'},
+191: {html: 'iquest', desc: 'inverted question mark'},
+192: {html: 'Agrave', desc: 'capital A w/grave accent'},
+193: {html: 'Aacute', desc: 'capital A w/acute accent'},
+194: {html: 'Acirc', desc: 'capital A w/circumflex accent'},
+195: {html: 'Atilde', desc: 'capital A w/tilde'},
+196: {html: 'Auml', desc: 'capital A w/dieresis or umlaut mark'},
+197: {html: 'Aring', desc: 'capital A w/ring'},
+198: {html: 'AElig', desc: 'capital AE diphthong (ligature)'},
+199: {html: 'Ccedil', desc: 'capital C w/cedilla'},
+200: {html: 'Egrave', desc: 'capital E w/grave accent'},
+201: {html: 'Eacute', desc: 'capital E w/acute accent'},
+202: {html: 'Ecirc', desc: 'capital E w/circumflex accent'},
+203: {html: 'Euml', desc: 'capital E w/dieresis or umlaut mark'},
+204: {html: 'Igrave', desc: 'capital I w/grave accent'},
+205: {html: 'Iacute', desc: 'capital I w/acute accent'},
+206: {html: 'Icirc', desc: 'capital I w/circumflex accent'},
+207: {html: 'Iuml', desc: 'capital I w/dieresis or umlaut mark'},
+208: {html: 'ETH', desc: 'capital Eth, Icelandic'},
+209: {html: 'Ntilde', desc: 'capital N w/tilde'},
+210: {html: 'Ograve', desc: 'capital O w/grave accent'},
+211: {html: 'Oacute', desc: 'capital O w/acute accent'},
+212: {html: 'Ocirc', desc: 'capital O w/circumflex accent'},
+213: {html: 'Otilde', desc: 'capital O w/tilde'},
+214: {html: 'Ouml', desc: 'capital O w/dieresis or umlaut mark'},
+215: {html: 'times', desc: 'multiply sign'},
+216: {html: 'Oslash', desc: 'capital O w/slash'},
+217: {html: 'Ugrave', desc: 'capital U w/grave accent'},
+218: {html: 'Uacute', desc: 'capital U w/acute accent'},
+219: {html: 'Ucirc', desc: 'capital U w/circumflex accent'},
+220: {html: 'Uuml', desc: 'capital U w/dieresis or umlaut mark'},
+221: {html: 'Yacute', desc: 'capital Y w/acute accent'},
+222: {html: 'THORN', desc: 'capital THORN, Icelandic'},
+223: {html: 'szlig', desc: 'small sharp s, German (sz ligature)'},
+224: {html: 'agrave', desc: 'small a w/grave accent'},
+225: {html: 'aacute', desc: 'small a w/acute accent'},
+226: {html: 'acirc', desc: 'small a w/circumflex accent'},
+227: {html: 'atilde', desc: 'small a w/tilde'},
+228: {html: 'auml', desc: 'small a w/dieresis or umlaut mark'},
+229: {html: 'aring', desc: 'small a w/ring'},
+230: {html: 'aelig', desc: 'small ae diphthong (ligature)'},
+231: {html: 'ccedil', desc: 'small c w/cedilla'},
+232: {html: 'egrave', desc: 'small e w/grave accent'},
+233: {html: 'eacute', desc: 'small e w/acute accent'},
+234: {html: 'ecirc', desc: 'small e w/circumflex accent'},
+235: {html: 'euml', desc: 'small e w/dieresis or umlaut mark'},
+236: {html: 'igrave', desc: 'small i w/grave accent'},
+237: {html: 'iacute', desc: 'small i w/acute accent'},
+238: {html: 'icirc', desc: 'small i w/circumflex accent'},
+239: {html: 'iuml', desc: 'small i w/dieresis or umlaut mark'},
+240: {html: 'eth', desc: 'small eth, Icelandic'},
+241: {html: 'ntilde', desc: 'small n w/tilde'},
+242: {html: 'ograve', desc: 'small o w/grave accent'},
+243: {html: 'oacute', desc: 'small o w/acute accent'},
+244: {html: 'ocirc', desc: 'small o w/circumflex accent'},
+245: {html: 'otilde', desc: 'small o w/tilde'},
+246: {html: 'ouml', desc: 'small o w/dieresis or umlaut mark'},
+247: {html: 'divide', desc: 'divide sign'},
+248: {html: 'oslash', desc: 'small o w/slash'},
+249: {html: 'ugrave', desc: 'small u w/grave accent'},
+250: {html: 'uacute', desc: 'small u w/acute accent'},
+251: {html: 'ucirc', desc: 'small u w/circumflex accent'},
+252: {html: 'uuml', desc: 'small u w/dieresis or umlaut mark'},
+253: {html: 'yacute', desc: 'small y w/acute accent'},
+254: {html: 'thorn', desc: 'small thorn, Icelandic'},
+255: {html: 'yuml', desc: 'small y w/dieresis or umlaut mark'},
+338: {html: 'OElig', desc: 'capital OE ethel (ligature)'},
+339: {html: 'oelig', desc: 'small oe ethel (ligature)'},
+352: {html: 'Scaron', desc: 'capital S w/caron'},
+353: {html: 'scaron', desc: 'small s w/caron'},
+376: {html: 'Yuml', desc: 'capital Y w/dieresis or umlaut'},
+402: {html: 'fnof', desc: 'function'},
+601: {desc: 'schwa vowel'},
+710: {html: 'circ', desc: 'circumflex'},
+732: {html: 'tilde', desc: 'small tilde'},
+913: {html: 'Alpha', desc: 'capital Alpha'},
+914: {html: 'Beta', desc: 'capital Beta'},
+915: {html: 'Gamma', desc: 'capital Gamma'},
+916: {html: 'Delta', desc: 'capital Delta'},
+917: {html: 'Epsilon', desc: 'capital Epsilon'},
+918: {html: 'Zeta', desc: 'capital Zeta'},
+919: {html: 'Eta', desc: 'capital Eta'},
+920: {html: 'Theta', desc: 'capital Theta'},
+921: {html: 'Iota', desc: 'capital Iota'},
+922: {html: 'Kappa', desc: 'capital Kappa'},
+923: {html: 'Lambda', desc: 'capital Lambda'},
+924: {html: 'Mu', desc: 'capital Mu'},
+925: {html: 'Nu', desc: 'capital Nu'},
+926: {html: 'Xi', desc: 'capital Xi'},
+927: {html: 'Omicron', desc: 'capital Omicron'},
+928: {html: 'Pi', desc: 'capital Pi'},
+929: {html: 'Rho', desc: 'capital Rho'},
+931: {html: 'Sigma', desc: 'capital Sigma'},
+// Final sigma does not exist in uppercase
+932: {html: 'Tau', desc: 'capital Tau'},
+933: {html: 'Upsilon', desc: 'capital Upsilon'},
+934: {html: 'Phi', desc: 'capital Phi'},
+935: {html: 'Chi', desc: 'capital Chi'},
+936: {html: 'Psi', desc: 'capital Psi'},
+937: {html: 'Omega', desc: 'capital Omega'},
+945: {html: 'alpha', desc: 'small alpha'},
+946: {html: 'beta', desc: 'small beta'},
+947: {html: 'gamma', desc: 'small gamma'},
+948: {html: 'delta', desc: 'small delta'},
+949: {html: 'epsilon', desc: 'small epsilon'},
+950: {html: 'zeta', desc: 'small zeta'},
+951: {html: 'eta', desc: 'small eta'},
+952: {html: 'theta', desc: 'small theta'},
+953: {html: 'iota', desc: 'small iota'},
+954: {html: 'kappa', desc: 'small kappa'},
+955: {html: 'lambda', desc: 'small lambda'},
+956: {html: 'mu', desc: 'small mu'},
+957: {html: 'nu', desc: 'small nu'},
+958: {html: 'xi', desc: 'small xi'},
+959: {html: 'omicron', desc: 'small omicron'},
+960: {html: 'pi', desc: 'small pi'},
+961: {html: 'rho', desc: 'small rho'},
+962: {html: 'sigmaf', desc: 'small final sigma'},
+963: {html: 'sigma', desc: 'small sigma'},
+964: {html: 'tau', desc: 'small tau'},
+965: {html: 'upsilon', desc: 'small upsilon'},
+966: {html: 'phi', desc: 'small phi'},
+967: {html: 'chi', desc: 'small chi'},
+968: {html: 'psi', desc: 'small psi'},
+969: {html: 'omega', desc: 'small omega'},
+977: {html: 'thetasym', desc: 'small theta symbol'},
+978: {html: 'upsih', desc: 'small upsilon with hook'},
+982: {html: 'piv', desc: 'pi symbol'},
+1757: {desc: 'Arabic End of Ayah'},
+1758: {desc: 'Arabic Start of Rub El Hizb'},
+1769: {desc: 'Arabic Place of Sadjah'},
+2384: {desc: 'Devanagari Om'},
+8194: {html: 'ensp', desc: 'en space', cssClass: 'shade'},
+8195: {html: 'emsp', desc: 'em space', cssClass: 'shade'},
+8201: {html: 'thinsp', desc: 'thin space', cssClass: 'shade'},
+8202: {desc: 'hair space', cssClass: 'shade'},
+8203: {desc: 'zero-width space', cssClass: 'shade'},
+8204: {html: 'zwnj', desc: 'zero-width non-joiner', cssClass: 'shade'},
+8205: {html: 'zwj', desc: 'zero-width joiner', cssClass: 'shade'},
+8206: {html: 'lrm', desc: 'left-to-right mark'},
+8207: {html: 'rlm', desc: 'right-to-left mark'},
+8211: {html: 'ndash', desc: 'en dash'},
+8212: {html: 'mdash', desc: 'em dash'},
+8216: {html: 'lsquo', desc: 'opening single quote'},
+8217: {html: 'rsquo', desc: 'closing single quote'},
+8218: {html: 'sbquo', desc: 'single low-9 quotation mark'},
+8220: {html: 'ldquo', desc: 'opening double quote'},
+8221: {html: 'rdquo', desc: 'closing double quote'},
+8222: {html: 'bdquo', desc: 'double low-9 quotation mark'},
+8224: {html: 'dagger', desc: 'dagger'},
+8225: {html: 'Dagger', desc: 'double dagger'},
+8226: {html: 'bull', desc: 'bullet'},
+8230: {html: 'hellip', desc: 'ellipsis'},
+8231: {desc: 'hyphenation point'},
+8240: {html: 'permil', desc: 'permille'},
+8242: {html: 'prime', desc: 'prime'},
+8243: {html: 'Prime', desc: 'double prime'},
+8249: {html: 'lsaquo', desc: 'single angle quotation mark, left'},
+8250: {html: 'rsaquo', desc: 'single angle quotation mark, right'},
+8252: {desc: 'double exclamation mark'},
+8253: {desc: 'interrobang'},
+8254: {html: 'oline', desc: 'overline'},
+8260: {html: 'frasl', desc: 'fraction slash'},
+8275: {desc: 'swung dash'},
+8353: {desc: 'col\u00f3n'},
+8354: {desc: 'Brazilian Cruzeiro'},
+8355: {desc: 'French franc'},
+8356: {desc: 'lira'},
+8357: {desc: 'mill'},
+8358: {desc: 'Nigerian naira'},
+8359: {desc: 'peseta'},
+8360: {desc: 'rupee'},
+8361: {desc: 'Korean won'},
+8362: {desc: 'shekel'},
+8363: {desc: 'Vietnamese dong'},
+8365: {desc: 'Lao kip'},
+8366: {desc: 'Mongolian t\u00f6gr\u00f6g'},
+8367: {desc: 'Greek drachma'},
+8377: {desc: 'Indian rupee'},
+8364: {html: 'euro', desc: 'euro'},
+8465: {html: 'image', desc: 'imaginary part'},
+8468: {desc: 'pound (mass)'},
+8470: {desc: 'num\u00e9ro'},
+8476: {desc: 'real part'},
+8482: {html: 'trade', desc: 'trademark'},
+8486: {desc: 'Ohm'},
+8494: {desc: 'estimated symbol'},
+8501: {html: 'alefsym', desc: 'alef symbol'},
+8531: {desc: 'fraction one-third'},
+8532: {desc: 'fraction two-thirds'},
+8539: {desc: 'fraction one-eighth'},
+8540: {desc: 'fraction three-eighths'},
+8541: {desc: 'fraction five-eighths'},
+8542: {desc: 'fraction seven-eighths'},
+8544: {desc: 'Roman numeral 1'},
+8545: {desc: 'Roman numeral 2'},
+8546: {desc: 'Roman numeral 3'},
+8547: {desc: 'Roman numeral 4'},
+8548: {desc: 'Roman numeral 5'},
+8549: {desc: 'Roman numeral 6'},
+8550: {desc: 'Roman numeral 7'},
+8551: {desc: 'Roman numeral 8'},
+8552: {desc: 'Roman numeral 9'},
+8553: {desc: 'Roman numeral 10'},
+8554: {desc: 'Roman numeral 11'},
+8555: {desc: 'Roman numeral 12'},
+8556: {desc: 'Roman numeral 50'},
+8557: {desc: 'Roman numeral 100'},
+8558: {desc: 'Roman numeral 500'},
+8559: {desc: 'Roman numeral 1000'},
+8560: {desc: 'lowercase Roman numeral 1'},
+8561: {desc: 'lowercase Roman numeral 2'},
+8562: {desc: 'lowercase Roman numeral 3'},
+8563: {desc: 'lowercase Roman numeral 4'},
+8564: {desc: 'lowercase Roman numeral 5'},
+8565: {desc: 'lowercase Roman numeral 6'},
+8566: {desc: 'lowercase Roman numeral 7'},
+8567: {desc: 'lowercase Roman numeral 8'},
+8568: {desc: 'lowercase Roman numeral 9'},
+8569: {desc: 'lowercase Roman numeral 10'},
+8570: {desc: 'lowercase Roman numeral 11'},
+8571: {desc: 'lowercase Roman numeral 12'},
+8572: {desc: 'lowercase Roman numeral 50'},
+8573: {desc: 'lowercase Roman numeral 100'},
+8574: {desc: 'lowercase Roman numeral 500'},
+8575: {desc: 'lowercase Roman numeral 1000'},
+8592: {html: 'larr', desc: 'left arrow'},
+8593: {html: 'uarr', desc: 'up arrow'},
+8594: {html: 'rarr', desc: 'right arrow'},
+8595: {html: 'darr', desc: 'down arrow'},
+8596: {html: 'harr', desc: 'left\u2013right arrow'},
+8597: {html: 'crarr', desc: 'carriage return'},
+8614: {desc: 'rightward arrow from bar'},
+8652: {desc: 'rightward harpoon over leftwards harpoon'},
+8656: {html: 'lArr', desc: 'double left arrow'},
+8657: {html: 'uArr', desc: 'double up arrow'},
+8658: {html: 'rArr', desc: 'double right arrow'},
+8659: {html: 'dArr', desc: 'double down arrow'},
+8660: {html: 'hArr', desc: 'double left\u2013right arrow'},
+8704: {html: 'forall', desc: 'for all'},
+8706: {html: 'part', desc: 'partial differential'},
+8707: {html: 'exist', desc: 'there exists'},
+8709: {html: 'empty', desc: 'empty set, null set, diameter'},
+8711: {html: 'nabla', desc: 'nabla/backward difference'},
+8712: {html: 'isin', desc: 'element of'},
+8713: {html: 'notin', desc: 'not an element of'},
+8715: {html: 'ni', desc: 'contains as member'},
+8719: {html: 'prod', desc: 'n-ary product, product sign'},
+8721: {html: 'sum', desc: 'n-ary summation'},
+8722: {html: 'minus', desc: 'minus sign'},
+8727: {html: 'lowast', desc: 'asterisk operator'},
+8728: {html: 'weierp', desc: 'Weierstrass p'},
+8730: {html: 'radic', desc: 'square root'},
+8731: {desc: 'cube root'},
+8732: {desc: 'fourth root'},
+8733: {html: 'prop', desc: 'proportional to'},
+8734: {html: 'infin', desc: 'infinity'},
+8735: {desc: 'right angle'},
+8736: {html: 'ang', desc: 'angle'},
+8743: {html: 'and', desc: 'logical and'},
+8744: {html: 'or', desc: 'logical or'},
+8745: {html: 'cap', desc: 'cap, intersection'},
+8746: {html: 'cup', desc: 'cup, union'},
+8747: {html: 'int', desc: 'integral'},
+8748: {desc: 'double integral'},
+8749: {desc: 'triple integral'},
+8750: {desc: 'contour integral'},
+8751: {desc: 'surface integral'},
+8752: {desc: 'volume integral'},
+8753: {desc: 'clockwise integral'},
+8754: {desc: 'clockwise contour integral'},
+8755: {desc: 'anticlockwise contour integral'},
+8756: {html: 'there4', desc: 'therefore'},
+8764: {html: 'sim', desc: 'tilde operator'},
+8767: {desc: 'sine wave'},
+8773: {html: 'cong', desc: 'approximately equal to'},
+8776: {html: 'asymp', desc: 'asymptotic to'},
+8800: {html: 'ne', desc: 'not equal to'},
+8801: {html: 'equiv', desc: 'identical to'},
+8804: {html: 'le', desc: 'less-than or equal to'},
+8805: {html: 'ge', desc: 'greater-than or equal to'},
+8834: {html: 'sub', desc: 'subset of'},
+8835: {html: 'sup', desc: 'superset of'},
+8836: {html: 'nsub', desc: 'not a subset of'},
+8838: {html: 'sube', desc: 'subset of or equal to'},
+8839: {html: 'supe', desc: 'superset of or equal to'},
+8853: {html: 'oplus', desc: 'circled plus, direct sum, Earth'},
+8855: {html: 'otimes', desc: 'circled times, vector product'},
+8869: {html: 'perp', desc: 'up tack, orthogonal to, perpendicular to'},
+8901: {html: 'sdot', desc: 'dot operator'},
+8968: {html: 'lceil', desc: 'left ceiling, apl upstile'},
+8969: {html: 'rceil', desc: 'right ceiling'},
+8970: {html: 'lfloor', desc: 'left floor, apl downstile'},
+8971: {html: 'rfloor', desc: 'right floor'},
+8982: {desc: 'position indicator'},
+8984: {desc: 'Saint John\'s Arms, place of interest, Saint Hannes cross'},
+8987: {desc: 'hourglass'},
+9000: {desc: 'keyboard'},
+9001: {html: 'lang', desc: 'left-pointing angle bracket}'},
+9002: {html: 'rang', desc: 'right-pointing angle bracket'},
+9632: {desc: 'black square'},
+9633: {desc: 'white square'},
+9654: {desc: 'black right-pointing triangle'},
+9674: {html: 'loz', desc: 'lozenge'},
+9673: {desc: 'circle \u2013 fisheye'},
+9675: {desc: 'circle \u2013 empty'},
+9679: {desc: 'circle \u2013 full'},
+9682: {desc: 'circle \u2013 lower half'},
+9683: {desc: 'circle \u2013 top half'},
+9729: {desc: 'cloud'},
+9730: {desc: 'umbrella'},
+9731: {desc: 'snowman'},
+9732: {desc: 'comet'},
+9733: {desc: 'black star'},
+9734: {desc: 'white star'},
+9742: {desc: 'black telephone'},
+9743: {desc: 'white telephone'},
+9744: {desc: 'ballot box'},
+9745: {desc: 'ballot box with check'},
+9746: {desc: 'ballot box with X'},
+9756: {desc: 'white left pointing index'},
+9757: {desc: 'white up pointing index'},
+9758: {desc: 'white right pointing index'},
+9759: {desc: 'white down pointing index'},
+9760: {desc: 'skull and crossbones'},
+9762: {desc: 'radioactive'},
+9763: {desc: 'biohazard'},
+9765: {desc: 'ankh'},
+9767: {desc: 'Chi Rho, labarum'},
+9768: {desc: 'Croix de Lorraine'},
+9770: {desc: 'star and crescent'},
+9773: {desc: 'hammer and sickle'},
+9774: {desc: 'peace symbol'},
+9775: {desc: 'yin yang'},
+9784: {desc: 'wheel of dharma'},
+9785: {desc: 'white frowning face'},
+9786: {desc: 'white smiling face'},
+9787: {desc: 'black smiling face'},
+9788: {desc: 'white sun with rays'},
+9789: {desc: 'waxing crescent'},
+9790: {desc: 'waning crescent'},
+9791: {desc: 'Mercury, hermaphrodite sign'},
+9792: {desc: 'Venus, female sign'},
+9793: {desc: 'Earth'},
+9794: {desc: 'Mars, male sign'},
+9795: {desc: 'Jupiter'},
+9796: {desc: 'Saturn'},
+9797: {desc: 'Uranus'},
+9798: {desc: 'Neptune'},
+9799: {desc: 'Pluto'},
+9800: {desc: 'Aries'},
+9801: {desc: 'Taurus'},
+9802: {desc: 'Gemini'},
+9803: {desc: 'Cancer'},
+9804: {desc: 'Leo'},
+9805: {desc: 'Virgo'},
+9806: {desc: 'Libra'},
+9807: {desc: 'Scorpius (Scorpio)'},
+9808: {desc: 'Sagittarius, unknown gender sign'},
+9809: {desc: 'Capricorn'},
+9810: {desc: 'Aquarius'},
+9811: {desc: 'Pisces'},
+9812: {desc: 'chess \u2013 white king'},
+9813: {desc: 'chess \u2013 white queen'},
+9814: {desc: 'chess \u2013 white rook'},
+9815: {desc: 'chess \u2013 white bishop'},
+9816: {desc: 'chess \u2013 white knight'},
+9817: {desc: 'chess \u2013 white pawn'},
+9818: {desc: 'chess \u2013 black king'},
+9819: {desc: 'chess \u2013 black queen'},
+9820: {desc: 'chess \u2013 black rook'},
+9821: {desc: 'chess \u2013 black bishop'},
+9822: {desc: 'chess \u2013 black knight'},
+9823: {desc: 'chess \u2013 black pawn'},
+9824: {html: 'spades', desc: 'spade suit'},
+9825: {desc: 'white heart'},
+9826: {desc: 'white diamond'},
+9827: {html: 'clubs', desc: 'clubs suit/shamrock'},
+9828: {desc: 'white spade suit'},
+9829: {html: 'hearts', desc: 'heart'},
+9830: {html: 'diams', desc: 'diamond'},
+9831: {desc: 'white clubs suit'},
+9832: {desc: 'hot springs'},
+9833: {desc: 'quarter note'},
+9834: {desc: 'eighth note'},
+9835: {desc: 'beamed eighth notes'},
+9836: {desc: 'beamed sixteenth notes'},
+9837: {desc: 'flat'},
+9838: {desc: 'natural'},
+9839: {desc: 'sharp'},
+9840: {desc: 'west syriac cross'},
+9841: {desc: 'east syriac cross'},
+9842: {desc: 'universal recycling symbol'},
+9843: {desc: 'recycling \u2013 type-1 plastics'},
+9844: {desc: 'recycling \u2013 type-2 plastics'},
+9845: {desc: 'recycling \u2013 type-3 plastics'},
+9846: {desc: 'recycling \u2013 type-4 plastics'},
+9847: {desc: 'recycling \u2013 type-5 plastics'},
+9848: {desc: 'recycling \u2013 type-6 plastics'},
+9849: {desc: 'recycling \u2013 type-7 plastics'},
+9850: {desc: 'recycling \u2013 generic materials'},
+9851: {desc: 'black universal recycling'},
+9852: {desc: 'recycled paper'},
+9853: {desc: 'partially recycled paper'},
+9854: {desc: 'permanent paper sign'},
+9855: {desc: 'wheelchair'},
+9856: {desc: 'die face-1'},
+9857: {desc: 'die face-2'},
+9858: {desc: 'die face-3'},
+9859: {desc: 'die face-4'},
+9860: {desc: 'die face-5'},
+9861: {desc: 'die face-6'},
+9862: {desc: 'bhite circle w/dot right'},
+9863: {desc: 'bhite circle w/two dots'},
+9864: {desc: 'black circle w/white dot right'},
+9865: {desc: 'black circle w/two white dots'},
+9866: {desc: 'monogram for yang'},
+9867: {desc: 'monogram for yin'},
+9868: {desc: 'digram for greater yang'},
+9869: {desc: 'digram for lesser yin'},
+9870: {desc: 'digram for lesser yang'},
+9871: {desc: 'digram for greater yin'},
+9872: {desc: 'white flag'},
+9873: {desc: 'black flag'},
+9874: {desc: 'hammer and pick'},
+9875: {desc: 'anchor'},
+9876: {desc: 'crossed swords'},
+9877: {desc: 'staff of Aesculapius'},
+9878: {desc: 'Weighing scales'},
+9879: {desc: 'Alembic'},
+9880: {desc: 'flower'},
+9881: {desc: 'gear'},
+9882: {desc: 'staff of Hermes'},
+9883: {desc: 'atom'},
+9884: {desc: 'fleur-de-lis'},
+9888: {desc: 'warning'},
+9889: {desc: 'high voltage'},
+9893: {desc: 'transgender sign 1'},
+9895: {desc: 'transgender sign 2'},
+9985: {desc: 'upper blade scissors'},
+9986: {desc: 'black scissors'},
+9987: {desc: 'lower blade scissors'},
+9988: {desc: 'white scissors'},
+9990: {desc: 'telephone location'},
+9991: {desc: 'tape drive'},
+9992: {desc: 'airplane'},
+9993: {desc: 'envelope'},
+9996: {desc: 'victory hand'},
+9997: {desc: 'writing hand'},
+9998: {desc: 'pencil \u2013 lower-right'},
+9999: {desc: 'pencil \u2013 right'},
+10000: {desc: 'pencil \u2013 upper-right'},
+10001: {desc: 'white nib'},
+10002: {desc: 'black nib'},
+10003: {desc: 'checkmark'},
+10004: {desc: 'heavy checkmark'},
+10007: {desc: 'ballot X'},
+10008: {desc: 'heavy ballot X'},
+10014: {desc: 'shadowed white Latin cross'},
+10016: {desc: 'Maltese cross'},
+10017: {desc: 'Star of David'},
+10031: {desc: 'pinwheel star'},
+10047: {desc: 'black florette'},
+10048: {desc: 'white florette'},
+10052: {desc: 'snowflake'},
+10061: {desc: 'shadowed white circle'},
+10176: {desc: 'three-dimensional angle'},
+10178: {desc: 'perpendicular'},
+10179: {desc: 'open subset'},
+10180: {desc: 'open superset'},
+10216: {desc: 'left angle bracket'},
+10217: {desc: 'right angle bracket'},
+12292: {desc: 'Japanese Industrial Standard'},
+12316: {desc: 'wave dash'},
+12320: {desc: 'postal mark face'},
+12336: {desc: 'wavy dash'},
+20803: {desc: 'yuan'},
+21325: {desc: 'Swastika or Manji'},
+21328: {desc: 'Swastika or Manji'},
+65279: {desc: 'zero-width no-break space'},
+65532: {desc: 'object replacement'},
+65533: {desc: 'replacement'}
+};
+
+/** The classes for which notes should be generated. */
+var classes = [{name: 'shade', desc: 'Background colours are used to demonstrate the width of the space.'}];
+
+// Variables dependent on or affecting HTML/CSS
+/** The name of the element that contains the notes. */
+var notesAnchor = 'notes';
+/** The name of the <a> node that was last clicked. */
+var lastClickName = 'lastclick';
+/** The CSS class name of the character cells. */
+var charClassName = 'character';
+
+// Global variables
+var lastClickNode;
+var charCells = [];
+var hexCells = [];
+
+/**
+ * Generate the page according to the variables above.
+ */
+window.onload = function () {
+    var select = document.getElementById('mySelect');
+    fonts.forEach(function (font) {
+        var option = document.createElement('option');
+        select.appendChild(option);
+        option.value = font;
+        option.appendChild(document.createTextNode(font));
+    });
+
+    var table = document.getElementById('charTable');
+
+    for (var charCode in chars) {
+        var charData = chars[charCode];
+
+        var tr = document.createElement('tr');
+        table.appendChild(tr);
+        if (!charData.html) {
+            tr.className = 'nonentityref';
+        }
+
+        // Display character
+        var cell = document.createElement('td');
+        tr.appendChild(cell);
+        cell.className = charClassName;
+        charCells.push(cell);
+        var tn = document.createTextNode(String.fromCharCode(charCode));
+        if (charData.cssClass) {
+            var span = document.createElement('span');
+            cell.appendChild(span);
+            span.className = charData.cssClass;
+            span.appendChild(tn);
+        } else {
+            cell.appendChild(tn);
+        }
+
+        // HTML entity
+        cell = document.createElement('td');
+        tr.appendChild(cell);
+        cell.appendChild(document.createTextNode(charData.html ? '&' + charData.html + ';' : NO_ENTITY_PLACEHOLDER));
+
+        // Decimal value
+        cell = document.createElement('td');
+        tr.appendChild(cell);
+        cell.appendChild(document.createTextNode('&#' + charCode + ';'));
+
+        // Hex value
+        var hex = parseInt(charCode, 10).toString(16);
+        cell = document.createElement('td');
+        tr.appendChild(cell);
+        hexCells.push(cell);
+        cell.appendChild(document.createTextNode('&#x' + hex + ';'));
+
+        // Unicode
+        cell = document.createElement('td');
+        tr.appendChild(cell);
+        var unicodeLiteral = '\\u';
+        for (var i = hex.length; i < 4; i++) {
+            unicodeLiteral += '0';
+        }
+        unicodeLiteral += hex;
+        cell.appendChild(document.createTextNode(unicodeLiteral));
+
+        // Description
+        cell = document.createElement('td');
+        tr.appendChild(cell);
+        if (charData.desc) {
+            cell.appendChild(document.createTextNode(charData.desc));
+        }
+        if (charData.cssClass) {
+            for (var i = 0; i < classes.length; i++) {
+                if (charData.cssClass === classes[i].name) {
+                    var sup = document.createElement('sup');
+                    sup.appendChild(document.createTextNode(i + 1));
+                    var a = document.createElement('a');
+                    a.href = '#' + notesAnchor;
+                    a.appendChild(sup);
+                    a.onclick = function () {
+                        setLastClick(this);
+                    };
+                    cell.appendChild(a);
+                    break;
+                }
+            }
+        }
+    }
+
+    var div = document.getElementById('notes');
+    classes.forEach(function (myClass, i) {
+        var sup = document.createElement('sup');
+        sup.appendChild(document.createTextNode(i + 1));
+
+        div.appendChild(sup);
+        div.appendChild(document.createTextNode(' ' + myClass.desc));
+        div.appendChild(document.createElement('br'));
+    });
+};
+
+/**
+ * Set the 'lastClick' anchor at the given element.
+ */
+function setLastClick(e) {
+    if (lastClickNode) {
+        lastClickNode.name = '';
+    }
+    e.name = lastClickName;
+    lastClickNode = e;
+    document.getElementById('backbutton').className = '';
+}
+
+/**
+ * Change the size of the character column according to what is specified in
+ * the font size text input box.
+ */
+function changeCharSize() {
+    var value = document.getElementById('charsize').value;
+    charCells.forEach(function (charCell) {
+        charCell.style.fontSize = value;
+    });
+}
+
+document.getElementById('mySelect').addEventListener('change', function(evt) {
+    document.body.style.fontFamily = evt.currentTarget.value;
+});
+
+document.getElementById('changeFont').addEventListener('click', function() {
+    document.body.style.fontFamily = document.getElementById('customFont').value;
+});
+
+document.getElementById('charsize').addEventListener('keydown', function(evt) {
+    if (evt.keyCode === 13) {
+        changeCharSize();
+    }
+});
+document.getElementById('charsizebutton').addEventListener('click', changeCharSize);
+
+document.getElementById('hexcaps').addEventListener('click', function() {
+    for (var i = 0; i < hexCells.length; i++) {
+        if (/[a-f]/i.test(hexCells[i].firstChild.data)) {
+            var changeCase;
+            if (/[a-f]/.test(hexCells[i].firstChild.data)) {
+                changeCase = function(n) { n.data = n.data.toUpperCase().replace('X', 'x'); };
+            } else {
+                changeCase = function(n) { n.data = n.data.toLowerCase(); };
+            }
+            for (; i < hexCells.length; i++) {
+                changeCase(hexCells[i].firstChild);
+            }
+            break;
+        }
+    }
+});
+
+document.getElementById('hidenonentityrefs').addEventListener('change', function(evt) {
+    var table = document.getElementById('charTable');
+    table.className = table.className ? '' : 'hidenonentityrefs';
+});
+
+document.getElementsByClassName('toggle')[0].addEventListener('click', function(evt) {
+    var parent = evt.target.parentNode;
+    if (/ hidden$/.test(parent.className)) {
+        parent.className = parent.className.replace(/ hidden/, '');
+    } else {
+        parent.className += ' hidden';
+    }
+    return false;
+});
+
+});
+</script>
+</head>
+<body>
+
+    <div class="settings showhide">
+        <a class="toggle" href="#"></a>
+        <table>
+            <tr>
+                <td></td>
+                <td><select size="1" id="mySelect">
+                    <option value="">Default font</option>
+                </select></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><label for="customFont">Other font:</label></td>
+                <td><input type="text" id="customFont" /></td>
+                <td><input type="button" id="changeFont" value="Change" /></td>
+            </tr>
+        </table>
+
+        <label for="charsize">Character size: </label><input id="charsize" type="text" size="4" value="100%" /><span> </span><input id="charsizebutton" type="button" value="Go" />
+
+        <p><label for="hidenonentityrefs">Display only HTML char entity refs</label> <input type="checkbox" id="hidenonentityrefs" /></p>
+    </div>
+
+    <table id="charTable">
+        <tr>
+            <th></th>
+            <th>HTML entity</th>
+            <th>Dec.</th>
+            <th>Hex.<br /><input id="hexcaps" type="button" value="A/a"></th>
+            <th>Unicode<br />esc.</th>
+            <th>Description</th>
+        </tr>
+    </table>
+
+    <div id="notes">
+        <a id="backbutton" href="#lastclick" class="hidden">Back</a><br>
+    </div>
+
+</body>
+</html>

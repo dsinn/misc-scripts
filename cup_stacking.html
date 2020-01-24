@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>AutoHotkey Script Maker for a Game Noone Plays</title>
+<style type="text/css">
+body {
+    background-color: black;
+    color: white;
+    font-family: Arial;
+}
+
+#cups {
+    background-color: mediumSpringGreen;
+    border-collapse: collapse;
+    margin-bottom: 0.5em;
+}
+#cups td {
+    width: 1em;
+}
+#cups input {
+    background-color: gold;
+    text-transform: uppercase;
+    width: 1em;
+}
+
+#output {
+    display: none;
+}
+</style>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+'use strict';
+
+var cups;
+
+function writeScript() {
+    var baseLetters = [];
+    for (var i = 0; i < cups.length; i++) {
+        if (cups[i].className === 'cup') {
+            if (!/[A-Za-z]/.test(cups[i].value)) {
+                window.alert('All cups must contain one letter.');
+                return;
+            }
+            baseLetters.push(cups[i].value);
+        }
+    }
+    
+    var sequence = [5, 6, 1, 7, 8, 9, 2, 3, 0, 10, 11, 4, // page 1, first half
+            1, 5, 6, 0, 2, 3, 7, 8, 9, 4, 10, 11, // page 1, second half
+            6, 10, 11, 5, 4, 1, 2, 7, 8, 0, 9, 3, // page 2, first half
+            1, 5, 4, 6, 10, 11, 3, 0, 9, 2, 7, 8, // page 2, second half
+            1, 5, 10, 3, 2, 7, 4, 11, 0, 6, 8, 9, // page 3, first half
+            1, 5, 9, 6, 8, 4, 11, 0, 10, 3, 2, 7 // page 3, second half
+            ];
+            
+    var outputLetters = [];
+    for (var i = 0; i < sequence.length; i++) {
+        outputLetters.push(baseLetters[sequence[i]]);
+    }
+    
+    var keyDelayMean = parseFloat('0' + document.getElementById('keyDelayMean').value);
+    var keyDelayStd = parseFloat('0' + document.getElementById('keyDelayStd').value);
+    var pageDelayMean = parseFloat('0' + document.getElementById('pageDelayMean').value);
+    var pageDelayStd = parseFloat('0' + document.getElementById('pageDelayStd').value);
+    var third = outputLetters.length / 3;
+    var output = '';
+    for (var i = 0; i < outputLetters.length; i++) {
+        output += '    Send ' + outputLetters[i].toUpperCase() + '\n';
+        output += '    Sleep, '
+                + Math.max(0, Math.round(randomN(keyDelayMean, keyDelayStd)))
+                + '\n';
+        if (i % third === 0 && i > 0) {
+            output += '    Sleep, '
+                    + Math.max(0, Math.round(randomN(pageDelayMean, pageDelayStd)))
+                    + '\n';
+        }
+    }
+    output += 'return';
+    var outputContainer = document.getElementById('output');
+    outputContainer.value = output;
+    outputContainer.style.display = 'inline';
+}
+
+function focusNext(evt) {
+    var ord = Math.max(evt.charCode, evt.keyCode, evt.which);
+    if (/[A-Za-z]/.test(String.fromCharCode(ord))) {
+        for (var i = 0; i < cups.length - 1; i++) {
+            if (evt.target === cups[i]) {
+                cups[i + 1].focus();
+                cups[i + 1].select();
+                break;
+            }
+        }
+    }
+}
+
+/**
+ * Irwin-Hall distribution
+ */
+function randomN(mean, std) {
+    var r = 0;
+    for (var i = 0; i < 3; i++) {
+        r += Math.random();
+    }
+    var z = (r - 1.5) * 2;
+    
+    return mean + z * std;
+}
+
+cups = document.getElementsByTagName('input');
+cups[0].focus();
+
+document.getElementById('cups').addEventListener('keypress', function(evt) {
+    if (evt.target.tagName === 'INPUT') {
+        focusNext(evt);
+    }
+});
+
+document.getElementById('cups').addEventListener('focus', function(evt) {
+    if (evt.target.tagName === 'INPUT') {
+        evt.target.select();
+    }
+});
+
+document.getElementById('settings').addEventListener('keyup', function(evt) {
+    if (evt.target.tagName === 'INPUT') {
+        evt.target.value = evt.target.value.replace(/\D/g, '');
+    }
+});
+
+document.getElementById('button').addEventListener('click', writeScript);
+
+document.getElementById('output').addEventListener('click', function(evt) {
+    evt.currentTarget.focus();
+    evt.currentTarget.select();
+});
+
+});
+</script>
+<body>
+<table id="cups">
+    <tr>
+        <td colspan="6"></td>
+        <td><input type="text" maxlength="1" class="cup" /></td>
+        <td colspan="6"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input type="text" maxlength="1" class="cup" /></td>
+        <td colspan="3"></td>
+        <td><input type="text" maxlength="1" class="cup" /></td>
+        <td></td>
+        <td><input type="text" maxlength="1" class="cup" /></td>
+        <td colspan="3"></td>
+        <td><input type="text" maxlength="1" class="cup" /></td>
+        <td></td>
+    </tr>
+    <tr>
+         <td><input type="text" maxlength="1" class="cup" /></td>
+         <td></td>
+         <td><input type="text" maxlength="1" class="cup" /></td>
+         <td></td>
+         <td><input type="text" maxlength="1" class="cup" /></td>
+         <td></td>
+         <td><input type="text" maxlength="1" class="cup" /></td>
+         <td></td>
+         <td><input type="text" maxlength="1" class="cup" /></td>
+         <td></td>
+         <td><input type="text" maxlength="1" class="cup" /></td>
+         <td></td>
+         <td><input type="text" maxlength="1" class="cup" /></td>
+    </tr>
+</table>
+
+<table id="settings">
+    <tr>
+        <td>Delay between keystrokes ~</td>
+        <td>N(<input type="text" id="keyDelayMean" value="0" size="1" />, <input type="text" id="keyDelayStd" value="0" size="1" />&sup2;)&nbsp;ms</td>
+    </tr>
+    <tr>
+        <td>Delay between pages ~</td>
+        <td>N(<input type="text" id="pageDelayMean" value="0" size="1" />, <input type="text" id="pageDelayStd" value="0" size="1" />&sup2;)&nbsp;ms</td>
+    </tr>
+</table>
+
+<p><input id="button" type="button" value="Go" /></p>
+
+<p><textarea rows="5" cols="20" id="output"></textarea></p>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Linear combination calculator for the gcd of 2 +ve ints</title>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+
+var aInput, bInput;
+
+function printGcd() {
+    var div = document.getElementById('result');
+    while (div.hasChildNodes()) {
+        div.removeChild(div.lastChild);
+    }
+
+    var a0 = parseInt(aInput.value.replace(/^\s+|\s+$/g,
+            ''), 10);
+    var b0 = parseInt(bInput.value.replace(/^\s+|\s+$/g,
+            ''), 10);
+    
+    var output;
+    if (isNaN(a0) || isNaN(b0)) {
+        output = 'Invalid number found.';
+    } else if (a0 < 1 || b0 < 1) {
+        output = 'Numbers must be positive.';
+    } else {
+        var a = Math.max(a0, b0);
+        var b = Math.min(a0, b0);
+        var g = gcd(a, b);
+        output = '(' + g.x + ' \u00d7 ' + a + ') + (' + g.y + ' \u00d7 ' + b
+                + ') = ' + g.value;
+    }
+    div.appendChild(document.createTextNode(output));
+}
+
+function gcd(a, b) {
+    var r = [];
+    r[0] = {value: a, x: 1, y: 0};
+    r[1] = {value: b, x: 0, y: 1};
+    var i = 1;
+    
+    while (r[i++].value > 0) {
+        var q = Math.floor(r[i - 2].value / r[i - 1].value);
+        r[i] = {value: r[i - 2].value % r[i - 1].value,
+                x: r[i - 2].x - q * r[i - 1].x,
+                y: r[i - 2].y - q * r[i - 1].y};
+    }
+    return r[i - 2];
+}
+
+function checkEnter(e) {
+    var keyCode = document.layers ? e.which : e.keyCode;
+    if (keyCode === 13) {
+        // Enter key pressed
+        printGcd();
+    }
+}
+
+aInput = document.getElementById('a');
+bInput = document.getElementById('b');
+
+aInput.focus();
+aInput.addEventListener('keypress', checkEnter);
+bInput.addEventListener('keypress', checkEnter);
+document.getElementById('button').addEventListener('click', printGcd);
+
+});
+</script>
+</head>
+<body>
+<table>
+    <tr>
+        <td><i>a</i> =</td>
+        <td><input type="text" id="a" accesskey="a"></td>
+    </tr>
+    <tr>
+        <td><i>b</i> =</td>
+        <td><input type="text" id="b" accesskey="b"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input id="button" type="button" value="Compute gcd" accesskey="c"></td>
+    </tr>
+</table>
+<div id="result"></div>
+</body>
+</html>

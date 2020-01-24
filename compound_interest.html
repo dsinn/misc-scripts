@@ -1,0 +1,183 @@
+﻿<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>燕梳仔個計數機</title>
+
+<style>
+body {
+  font-family: Arial;
+}
+input[type='button'] {
+  width: 100%;
+}
+input[type='text'] {
+  font-family: monospace;
+  width: 8em;
+}
+input[readonly] {
+  background-color: whitesmoke;
+}
+table {
+  border-spacing: 0.2em;
+}
+th[scope='row'] {
+  font-weight: normal;
+  text-align: left;
+  vertical-align: top;
+}
+th, td {
+  margin: 0.5em 0;
+}
+th[scope='row'] + td {
+  white-space: nowrap;
+}
+.output {
+  border: 1px solid silver;
+  text-align: right;
+}
+.hidden {
+  display: none;
+}
+#inInterest, #inDuration {
+  width: 4em;
+}
+#outPrincipal, #outInstallment, #outInterest, #outDuration {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+label[for='commas']:after { content: 'Add commas to output'; }
+label[for='installmentPeriod1']:after { content: 'monthly'; }
+label[for='installmentPeriod12']:after { content: 'yearly'; }
+label[for='durationUnit1']:after { content: 'months'; }
+label[for='durationUnit12']:after { content: 'years'; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+'use strict';
+
+var input = document.getElementById('input'); // lol
+input.principal.focus();
+
+input.compute.addEventListener('click', function () {
+    var p = parseNumber(input.principal.value),
+        r = parseNumber(input.installmentAmount.value),
+        period = parseInt(input.installmentPeriod.value, 10),
+        annualInterest = parseNumber(input.interest.value),
+        duration = parseNumber(input.duration.value),
+        durationMultiplier = parseInt(input.durationUnit.value, 10);
+
+    if (isNaN(p) || isNaN(r) || isNaN(annualInterest) || isNaN(duration)) {
+        return window.alert('Parse error');
+    }
+
+    var i = annualInterest / 1200,
+        totalMonths = duration * durationMultiplier;
+
+    // Math time
+    var invested = p + Math.ceil(r * totalMonths / period),
+        pv = p,
+        coefficient = 1 + i;
+    console.log(period);
+    for (var monthsElapsed = 0; monthsElapsed < totalMonths; monthsElapsed++) {
+        if (monthsElapsed % period === 0) {
+            pv += r;
+            console.log(pv);
+        }
+        pv *= coefficient;
+    }
+
+    outputToTable({
+        outPrincipal: formatNumber(p),
+        outInstallment: formatNumber(r) + ' ' + (period === 1 ? 'monthly' : 'yearly'),
+        outInterest: annualInterest,
+        outDuration: duration + ' ' + (durationMultiplier === 1 ? 'month' : 'year') + (duration === 1 ? '' : 's'),
+        outInvested: '$' + formatNumber(invested),
+        outEarned: '$' + formatNumber(pv - invested),
+        outGrowth: '$' + formatNumber(pv),
+    });
+});
+
+document.getElementById('clear').addEventListener('click', function () {
+    [input.principal, input.installmentAmount, input.interest, input.duration].forEach(function (node) {
+        node.value = '';
+    });
+});
+
+function parseNumber(s) {
+    return parseFloat(s.replace(/[,\s]/g, ''));
+}
+
+function formatNumber(x) {
+    var s = x.toFixed(2);
+    return input.commas.checked ? s.replace(/(\d)(?=(\d{3})+\.)/g, '$1,') : s;
+}
+
+function outputToTable(values) {
+    for (var id in values) {
+        if (values.hasOwnProperty(id)) {
+            var elem = document.getElementById(id);
+            elem.innerHTML = values[id];
+        }
+    }
+}
+
+});
+</script>
+    </head>
+    <body>
+      <button id="clear">Clear inputs</button>
+      <form id="input">
+        <table>
+          <tr>
+            <th scope="row"><label for="inPrincipal">Principal:</label></th>
+            <td>$<span id="outPrincipal"></span><input type="text" name="principal" id="inPrincipal" /></td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="inInstallment">Installments:</label></th>
+            <td>
+              $<span id="outInstallment"></span><input type="text" name="installmentAmount" id="inInstallment" /><br />
+              <input type="radio" name="installmentPeriod" value="1" id="installmentPeriod1" checked /> <label for="installmentPeriod1"></label>
+              <input type="radio" name="installmentPeriod" value="12" id="installmentPeriod12" /> <label for="installmentPeriod12"></label>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="inInterest">Interest rate:</label></th>
+            <td><span id="outInterest"></span><input type="text" name="interest" id="inInterest" />% per year</td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="inDuration">Duration:</label></th>
+            <td>
+              <span id="outDuration"></span><input type="text" name="duration" id="inDuration" /><br />
+              <input type="radio" name="durationUnit" value="1" id="durationUnit1" /><label for="durationUnit1"></label>
+              <input type="radio" name="durationUnit" value="12" id="durationUnit12" checked /><label for="durationUnit12"></label>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><input type="checkbox" name="commas" id="commas" /> <label for="commas"></label></td>
+          </tr>
+          <tr>
+            <td colspan="2"><input type="button" name="compute" value="Compute" /></td>
+          </tr>
+          <tr>
+            <th scope="row">Total investment:</th>
+            <td class="output"><span id="outInvested">&nbsp;</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Total interest earned:</th>
+            <td class="output"><span id="outEarned">&nbsp;</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Maturity value:</th>
+            <td class="output"><span id="outGrowth">&nbsp;</span></td>
+          </tr>
+        </table>
+      </form>
+    </body>
+</html>
