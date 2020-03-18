@@ -4,15 +4,27 @@
         <meta charset="UTF-8" />
         <title>Touhou translations helper</title>
         <style>
+html, body {
+    height: 100%;
+}
 body {
     background-color: black;
-    columns: 2;
-    height: 90vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
 }
-div {
-    display: inline-block;
-    height: 100%;
-    width: 100%;
+#settings {
+    display: block;
+    margin-bottom: 1em;
+}
+table {
+    background-color: white;
+    color: black;
+}
+.textboxes {
+    columns: 2;
+    flex-grow: 1;
 }
 textarea {
     font-family: monospace;
@@ -24,17 +36,17 @@ textarea[readonly] {
 }
         </style>
         <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     const inputElement = document.getElementById('input');
     const outputElement = document.getElementById('output');
     const sectionRegexes = {
-        kan: /(?:[\s\u0100-\uffff])+/g,
-        rom: /(?:w[ao]|[dt]?[sz]u|(?:[kstnhmyrgdbp])?[aiueo]|(?:[cs]|ss)h[aiuo]|([kpt])\1[aiueo]|fu|n\b|[\s!-@])+/gi
+        kan: /(?:[\u0100-\uffff])+/g,
+        rom: /(?:w[ao]|[dt]?[sz]u|(?:[kstnhmyrgdbp])?[aiueo]|(?:[cs]|ss)h[aiuo]|([kpt])\1[aiueo]|fu|n\b|[!-@])+/gi
     };
 
-    inputElement.addEventListener('keyup', function () {
+    inputElement.addEventListener('keyup', () => {
         let sections = {};
         let outputString = '';
 
@@ -54,11 +66,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 re.lastIndex = 0;
 
                 while (match = re.exec(section)) {
-                    console.log(match);
+                    console.log(sectionType, match);
                     matchesLength += match[0].length;
                 }
 
-                if (matchesLength / section.length > 0.8) {
+                if (matchesLength / section.replace(/\s/g, '').length > document.forms['settings'].elements[`threshold[${sectionType}]`].value) {
                     bestMatch = sectionType;
                     break;
                 }
@@ -90,9 +102,22 @@ document.addEventListener('DOMContentLoaded', function () {
     </head>
     <body>
         <div>
-            <textarea id="input"></textarea>
+            <form id="settings">
+                <table>
+                    <tr>
+                        <td>Kanji match threshold:</td>
+                        <td><input type="range" name="threshold[kan]" min="0" max="1" step="0.01" value="0.2" /></td>
+                    </tr>
+                    <tr>
+                        <td>Romaji match threshold:</td>
+                        <td><input type="range" name="threshold[rom]" min="0" max="1" step="0.01" value="0.8" /></td>
+                    </tr>
+                </table>
+            </form>
         </div>
-        <div>
+
+        <div class="textboxes">
+            <textarea id="input"></textarea>
             <textarea id="output" readonly></textarea>
         </div>
     </body>
