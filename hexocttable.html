@@ -5,20 +5,20 @@
 <title>Hexadecimal/Octal/Binary Times Table</title>
 <style type="text/css">
 body {
-	background-color: black;
-	color: white;
-	font-family: Arial;
+    background-color: black;
+    color: white;
+    font-family: Arial;
 }
 h2 {text-decoration: underline;}
 table {
     border-collapse: collapse;
-	font-family: Courier New;
+    font-family: Courier New;
 }
 th {color: yellow;}
 th, td {
     border: 1px solid white;
     padding: 0.2em 0.5em;
-	text-align: right;
+    text-align: right;
 }
 .dimension {width: 2em;}
 .highlight {
@@ -35,46 +35,46 @@ document.addEventListener('DOMContentLoaded', function() {
 var input, copy;
 
 function populate(tName, n, base) {
-	// Clear table
-	var table = document.getElementById(tName);
-	while (table.hasChildNodes()) {
-		table.removeChild(table.lastChild);
-	}
+    // Clear table
+    var table = document.getElementById(tName);
+    while (table.hasChildNodes()) {
+        table.removeChild(table.lastChild);
+    }
 
-	// First row
+    // First row
     var th = new Array(n + 1);
-	var row = table.insertRow(0);
-	var cell = document.createElement('th');
-	cell.appendChild(document.createTextNode('\u00d7'));
-	row.appendChild(cell);
-	for (var i = 1; i <= n; i++) {
-		cell = document.createElement('th');
-		cell.appendChild(document.createTextNode(i));
-		row.appendChild(cell);
+    var row = table.insertRow(0);
+    var cell = document.createElement('th');
+    cell.appendChild(document.createTextNode('\u00d7'));
+    row.appendChild(cell);
+    for (var i = 1; i <= n; i++) {
+        cell = document.createElement('th');
+        cell.appendChild(document.createTextNode(i));
+        row.appendChild(cell);
         th[i] = cell;
-	}
+    }
 
-	// Remaining rows
+    // Remaining rows
     var sum = new Array(n + 1);
     for (var i = 1; i <= n; i++) {
         sum[i] = 0;
     }
     
-	for (var i = 1; i <= n; i++) {
-		row = table.insertRow(i);
-		var leftTh = document.createElement('th');
-		leftTh.appendChild(document.createTextNode(i));
-		row.appendChild(leftTh);
+    for (var i = 1; i <= n; i++) {
+        row = table.insertRow(i);
+        var leftTh = document.createElement('th');
+        leftTh.appendChild(document.createTextNode(i));
+        row.appendChild(leftTh);
 
-		for (var j = 1; j <= n; j++) {
+        for (var j = 1; j <= n; j++) {
             sum[j] += j;
-			var s = sum[j].toString(base);
-			cell = row.insertCell(j);
+            var s = sum[j].toString(base);
+            cell = row.insertCell(j);
             cell.topTh = th[j];
             cell.leftTh = leftTh;
-			cell.appendChild(document.createTextNode(s));
-		}
-	}
+            cell.appendChild(document.createTextNode(s));
+        }
+    }
     
     // Event handlers
     table.addEventListener('mouseover', function(event) {
@@ -96,17 +96,17 @@ function populate(tName, n, base) {
 }
 
 function initialize() {
-	var n = parseInt(document.getElementById('tInput').value, 10);
-	if (isNaN(n)) {
-		window.alert('Non-numerical input detected.');
-	} else if (n <= 0) {
-		window.alert('Non-positive input detected.');
-	} else {
-		populate('tHex', n, 16);
-		populate('tOct', n, 8);
+    var n = parseInt(document.getElementById('tInput').value, 10);
+    if (isNaN(n)) {
+        window.alert('Non-numerical input detected.');
+    } else if (n <= 0) {
+        window.alert('Non-positive input detected.');
+    } else {
+        populate('tHex', n, 16);
+        populate('tOct', n, 8);
         populate('tBin', n, 2);
         document.getElementById('tableContainer').style.display = 'block';
-	}
+    }
 }
 
 input = document.getElementById('tInput');

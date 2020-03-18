@@ -1,99 +1,99 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="UTF-8" />
-		<title>Touhou translations helper</title>
-		<style>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Touhou translations helper</title>
+        <style>
 body {
-	background-color: black;
-	columns: 2;
-	height: 90vh;
+    background-color: black;
+    columns: 2;
+    height: 90vh;
 }
 div {
-	display: inline-block;
-	height: 100%;
-	width: 100%;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
 }
 textarea {
-	font-family: monospace;
-	height: 100%;
-	width: 100%;
+    font-family: monospace;
+    height: 100%;
+    width: 100%;
 }
 textarea[readonly] {
-	background-color: lightgrey;
+    background-color: lightgrey;
 }
-		</style>
-		<script>
+        </style>
+        <script>
 document.addEventListener('DOMContentLoaded', function () {
-	'use strict';
+    'use strict';
 
-	const inputElement = document.getElementById('input');
-	const outputElement = document.getElementById('output');
-	const sectionRegexes = {
-		kan: /(?:[\s\u0100-\uffff])+/g,
-		rom: /(?:w[ao]|[dt]?[sz]u|(?:[kstnhmyrgdbp])?[aiueo]|(?:[cs]|ss)h[aiuo]|([kpt])\1[aiueo]|fu|n\b|[\s!-@])+/gi
-	};
+    const inputElement = document.getElementById('input');
+    const outputElement = document.getElementById('output');
+    const sectionRegexes = {
+        kan: /(?:[\s\u0100-\uffff])+/g,
+        rom: /(?:w[ao]|[dt]?[sz]u|(?:[kstnhmyrgdbp])?[aiueo]|(?:[cs]|ss)h[aiuo]|([kpt])\1[aiueo]|fu|n\b|[\s!-@])+/gi
+    };
 
-	inputElement.addEventListener('keyup', function () {
-		let sections = {};
-		let outputString = '';
+    inputElement.addEventListener('keyup', function () {
+        let sections = {};
+        let outputString = '';
 
-		for (let sectionType in sectionRegexes) {
-			sections[sectionType] = [];
-		}
-		sections.eng = [];
+        for (let sectionType in sectionRegexes) {
+            sections[sectionType] = [];
+        }
+        sections.eng = [];
 
-		for (let section of inputElement.value.trim().split(/\n{2,}/)) {
-			let bestMatch = 'eng';
+        for (let section of inputElement.value.trim().split(/\n{2,}/)) {
+            let bestMatch = 'eng';
 
-			for (let sectionType in sectionRegexes) {
-				let re = sectionRegexes[sectionType],
-					matchesLength = 0,
-					match;
+            for (let sectionType in sectionRegexes) {
+                let re = sectionRegexes[sectionType],
+                    matchesLength = 0,
+                    match;
 
-				re.lastIndex = 0;
+                re.lastIndex = 0;
 
-				while (match = re.exec(section)) {
-					console.log(match);
-					matchesLength += match[0].length;
-				}
+                while (match = re.exec(section)) {
+                    console.log(match);
+                    matchesLength += match[0].length;
+                }
 
-				if (matchesLength / section.length > 0.8) {
-					bestMatch = sectionType;
-					break;
-				}
-			}
+                if (matchesLength / section.length > 0.8) {
+                    bestMatch = sectionType;
+                    break;
+                }
+            }
 
-			sections[bestMatch].push(section);
-		}
+            sections[bestMatch].push(section);
+        }
 
-		for (let sectionType in sections) {
-			if (!sections[sectionType].length) {
-				continue;
-			}
+        for (let sectionType in sections) {
+            if (!sections[sectionType].length) {
+                continue;
+            }
 
-			outputString += '\n\n';
-			for (let i = 0; i < sections[sectionType].length; i++) {
-				outputString += `|${sectionType}${i + 1}=\n${sections[sectionType][i]}\n`;
-			}
-		}
+            outputString += '\n\n';
+            for (let i = 0; i < sections[sectionType].length; i++) {
+                outputString += `|${sectionType}${i + 1}=\n${sections[sectionType][i]}\n`;
+            }
+        }
 
-		outputElement.value = outputString.trim();
-	});
+        outputElement.value = outputString.trim();
+    });
 
-	outputElement.addEventListener('click', function(evt) {
+    outputElement.addEventListener('click', function(evt) {
         evt.currentTarget.focus();
         evt.currentTarget.select();
     });
 });
-		</script>
-	</head>
-	<body>
-		<div>
-			<textarea id="input"></textarea>
-		</div>
-		<div>
-			<textarea id="output" readonly></textarea>
-		</div>
-	</body>
+        </script>
+    </head>
+    <body>
+        <div>
+            <textarea id="input"></textarea>
+        </div>
+        <div>
+            <textarea id="output" readonly></textarea>
+        </div>
+    </body>
 </html>
