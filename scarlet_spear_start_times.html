@@ -92,7 +92,7 @@ ul {
                 }
 
                 const li = document.createElement('li');
-                li.appendChild(document.createTextNode(cycleObject.format('hh:mma').replace(/^0/, '\u2007\u2007')));
+                li.appendChild(document.createTextNode(cycleObject.format('hh:mma').replace(/^0/, '\u2007')));
                 timeList.appendChild(li);
 
                 prevDayOfYear = cycleObject.dayOfYear();
