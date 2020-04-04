@@ -11,37 +11,46 @@
             font-size: 16px;
             line-height: 150%;
         }
-        
-dl {
-    float: left;
+
+main {
+    align-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-width: 1060px;
 }
 
-dt {
+div {
+    display: inline-block;
+    margin-right: 0.5em;
+    vertical-align: bottom;
+    flex-basis: 13%;
+}
+
+h2 {
     background: rgba(0,0,0,0.2);
-    padding: 4px 5px 0px 5px;
     border-radius: 10px 10px 0 0;
-    text-align: center;
+    font-size: 16px;
     font-weight: bold;
-}
-
-dd {
-    background: rgba(255,255,255,0.1);
-    margin: 0 0 10px;
-    padding: 0 5px 5px 5px;
-    border-radius: 0 0 10px 10px;
+    margin: 0;
+    padding: 4px 5px 2px 5px;
+    text-align: center;
 }
 
 ul {
-    margin: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 0 0 10px 10px;
+    height: 12em;
     list-style: none;
+    margin: 0 0 8px 0;
+    padding: 2px 5px 5px 5px;
     text-align: center;
-    padding: 0;
 }
     </style>
 </head>
 <body>
     <h1>Scarlet Spear &ndash; Start times</h1>
-    <dl id="list"></dl>
+    <main id="main"></main>
 
     <script
         crossorigin="anonymous"
@@ -51,7 +60,7 @@ ul {
     <script>
         (() => {
             const
-                dl = document.getElementById('list'),
+                main = document.getElementById('main'),
                 startTime = 1585070400,
                 endTime = 1588096800,
                 period = 11400,
@@ -67,24 +76,24 @@ ul {
 
             let cycleObject = moment(cycleTime, 'X'),
                 prevDayOfYear = -1,
-                ul;
+                timeList;
 
             for (let i = Math.floor((endTime - currentTime) / period); i >= 0; i--) {
                 if (prevDayOfYear !== cycleObject.dayOfYear()) {
-                    const dt = document.createElement('dt');
-                    dt.appendChild(document.createTextNode(cycleObject.format('dddd, MMMM D')));
-                    dl.appendChild(dt);
+                    const dateContainer = document.createElement('div');
+                    main.appendChild(dateContainer);
 
-                    const dd = document.createElement('dd');
-                    dl.appendChild(dd);
+                    const date = document.createElement('h2');
+                    date.appendChild(document.createTextNode(cycleObject.format('ddd, MMMM D')));
+                    dateContainer.appendChild(date);
 
-                    ul = document.createElement('ul');
-                    dd.appendChild(ul);
+                    timeList = document.createElement('ul');
+                    dateContainer.appendChild(timeList);
                 }
 
                 const li = document.createElement('li');
                 li.appendChild(document.createTextNode(cycleObject.format('hh:mma')));
-                ul.appendChild(li);
+                timeList.appendChild(li);
 
                 prevDayOfYear = cycleObject.dayOfYear();
                 cycleObject = cycleObject.add(period, 'second');
