@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Scarlet Spear &ndash; Start times</title>
+    <style>
+        body {
+            background-color: #454545;
+            color: white;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 150%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scarlet Spear &ndash; Start times</h1>
+    <dl id="list"></dl>
+
+    <script
+        crossorigin="anonymous"
+        integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo="
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"
+    ></script>
+    <script>
+        (() => {
+            const
+                dl = document.getElementById('list'),
+                startTime = 1585070400,
+                endTime = 1588096800,
+                period = 11400,
+                modulo = startTime % period,
+                currentTime = new Date().getTime() / 1000
+            ;
+            let cycleTime = currentTime - currentTime % period + modulo;
+
+            if (cycleTime > currentTime) {
+                // Ensure we don't pass the current cycle
+                cycleTime -= period;
+            }
+
+            let cycleObject = moment(cycleTime, 'X'),
+                prevDayOfYear = -1,
+                ul;
+
+            for (let i = Math.floor((endTime - currentTime) / period); i >= 0; i--) {
+                if (prevDayOfYear !== cycleObject.dayOfYear()) {
+                    const dt = document.createElement('dt');
+                    dt.appendChild(document.createTextNode(cycleObject.format('dddd, MMMM D')));
+                    dl.appendChild(dt);
+
+                    const dd = document.createElement('dd');
+                    dl.appendChild(dd);
+
+                    ul = document.createElement('ul');
+                    dd.appendChild(ul);
+                }
+
+                const li = document.createElement('li');
+                li.appendChild(document.createTextNode(cycleObject.format('hh:mma')));
+                ul.appendChild(li);
+
+                prevDayOfYear = cycleObject.dayOfYear();
+                cycleObject = cycleObject.add(period, 'second');
+            }
+        })();
+    </script>
+</body>
+</html>
