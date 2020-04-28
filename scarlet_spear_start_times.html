@@ -67,6 +67,14 @@ ul {
                 modulo = startTime % period,
                 currentTime = new Date().getTime() / 1000
             ;
+
+            if (currentTime > endTime) {
+                const container = document.createElement('div');
+                document.body.appendChild(container);
+                container.appendChild(document.createTextNode('The event has ended.'));
+                return;
+            }
+
             let cycleTime = currentTime - currentTime % period + modulo;
 
             if (cycleTime > currentTime) {
