@@ -8,15 +8,18 @@
     <script>
 function updatePage() {
   const rawHash = window.location.hash;
+  let titleColour = "";
 
   if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(rawHash)) {
     document.documentElement.style.backgroundColor = rawHash;
-    document.title = rawHash.toUpperCase();
+    titleColour = rawHash;
   } else {
     const cleanedValue = (rawHash.startsWith('#') ? rawHash.slice(1) : rawHash) || 'white';
     document.documentElement.style.backgroundColor = cleanedValue;
-    document.title = cleanedValue.charAt(0).toUpperCase() + cleanedValue.slice(1);
+    titleColour = cleanedValue.charAt(0).toUpperCase() + cleanedValue.slice(1);
   }
+
+  document.title = `${titleColour} Page`;
 }
 
 window.addEventListener('hashchange', updatePage);
