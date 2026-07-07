@@ -3,24 +3,41 @@
 <html lang="en">
   <head>
     <title>White Page</title>
+    <link id="dynamic-favicon" rel="icon" type="image/png" href="data:image/png;,">
   </head>
   <body>
     <script>
 function updatePage() {
   const rawHash = window.location.hash;
+  let styleColour = "";
   let titleColour = "";
 
   if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(rawHash)) {
-    document.documentElement.style.backgroundColor = rawHash;
+    styleColour = rawHash;
     titleColour = rawHash;
   } else {
-    const cleanedValue = (rawHash.startsWith('#') ? rawHash.slice(1) : rawHash) || 'white';
-    document.documentElement.style.backgroundColor = cleanedValue;
-    titleColour = cleanedValue.charAt(0).toUpperCase() + cleanedValue.slice(1);
+    styleColour = (rawHash.startsWith('#') ? rawHash.slice(1) : rawHash) || 'white';
+    titleColour = styleColour.charAt(0).toUpperCase() + styleColour.slice(1);
   }
 
   document.title = `${titleColour} Page`;
+  document.documentElement.style.backgroundColor = styleColour;
+  updateFavicon(document.documentElement.style.backgroundColor);
 }
+
+function updateFavicon(colour) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 32;
+
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = colour;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  document
+    .getElementById('dynamic-favicon')
+    .href = canvas.toDataURL('image/png');
+}
+
 
 window.addEventListener('hashchange', updatePage);
 window.addEventListener('load', updatePage);
