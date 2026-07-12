@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lilac Chaser</title>
+    <style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    align-items: center;
+    background-color: grey;
+    display: flex;
+    font-family: sans-serif;
+    height: 100vh;
+    justify-content: center;
+    overflow: hidden;
+    width: 100vw;
+}
+
+#controls {
+    position: absolute;
+    top: 0.625rem;
+    left: 0.625rem;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 0.375rem;
+    display: grid;
+    grid-template-columns: max-content max-content;
+    font-size: 1rem;
+    padding: 1rem;
+    gap: 0.5rem;
+}
+
+.control-group {
+    align-items: center;
+    display: grid;
+    grid-column: span 3;
+    grid-template-columns: subgrid;
+}
+
+.control-group label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.control-group .input-wrapper {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.control-group input[type="range"] {
+    width: 8rem;
+}
+
+.control-group input[type="number"] {
+    border: 0.0625rem solid lightgrey;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    padding: 0.125rem 0.25rem;
+    text-align: right;
+    width: 3.5rem;
+}
+
+#hex-display {
+    border-top: 0.0625rem solid lightgrey;
+    font-family: monospace;
+    font-weight: bold;
+    grid-column: span 3;
+    padding-top: 0.5rem;
+    margin-top: 0.25rem;
+    text-align: center;
+}
+
+#illusion-container {
+    --color: fuchsia;
+    --size: 100vmin;
+    position: relative;
+    height: var(--size, 100vmin);
+    width: var(--size, 100vmin);
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.dot {
+    position: absolute;
+    border-radius: 50%;
+    height: 16.9%;
+    width: 16.9%;
+
+    --radius: 40%;
+    --angle: calc(var(--i) * (2 * 3.141592653589793 / 12));
+    left: calc(50% + var(--radius) * cos(var(--angle)));
+    top: calc(50% + var(--radius) * sin(var(--angle)));
+    transform: translate(-50%, -50%);
+
+    background: radial-gradient(
+        circle at center,
+        var(--color) 0%,
+        transparent 69%
+    );
+}
+
+#illusion-container[data-active="0"] .dot[style*="--i: 0;"],
+#illusion-container[data-active="1"] .dot[style*="--i: 1;"],
+#illusion-container[data-active="2"] .dot[style*="--i: 2;"],
+#illusion-container[data-active="3"] .dot[style*="--i: 3;"],
+#illusion-container[data-active="4"] .dot[style*="--i: 4;"],
+#illusion-container[data-active="5"] .dot[style*="--i: 5;"],
+#illusion-container[data-active="6"] .dot[style*="--i: 6;"],
+#illusion-container[data-active="7"] .dot[style*="--i: 7;"],
+#illusion-container[data-active="8"] .dot[style*="--i: 8;"],
+#illusion-container[data-active="9"] .dot[style*="--i: 9;"],
+#illusion-container[data-active="10"] .dot[style*="--i: 10;"],
+#illusion-container[data-active="11"] .dot[style*="--i: 11;"] {
+    background: transparent;
+}
+
+#cross {
+    color: black;
+    font-size: clamp(1rem, calc(var(--size, 100vmin) * 0.1), 2rem);
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+
+    /* Center */
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    line-height: 0;
+}
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <div class="control-group">
+            <label for="size">Diameter (%):</label>
+            <input type="range" id="size" min="0" max="100" value="100" data-sync="size-num">
+            <input type="number" id="size-num" min="0" max="100" value="100" data-sync="size">
+        </div>
+        <div class="control-group">
+            <label for="speed">Interval (ms):</label>
+            <input type="range" id="speed" min="30" max="500" value="100" data-sync="speed-num">
+            <input type="number" id="speed-num" min="30" max="500" value="100" data-sync="speed">
+        </div>
+        <div class="control-group">
+            <label for="red">Red:</label>
+            <input type="range" id="red" min="0" max="255" value="255" data-sync="red-num">
+            <input type="number" id="red-num" min="0" max="255" value="255" data-sync="red">
+        </div>
+        <div class="control-group">
+            <label for="green">Green:</label>
+            <input type="range" id="green" min="0" max="255" value="0" data-sync="green-num">
+            <input type="number" id="green-num" min="0" max="255" value="0" data-sync="green">
+        </div>
+        <div class="control-group">
+            <label for="blue">Blue:</label>
+            <input type="range" id="blue" min="0" max="255" value="255" data-sync="blue-num">
+            <input type="number" id="blue-num" min="0" max="255" value="255" data-sync="blue">
+        </div>
+        <div id="hex-display">#FF00FF</div>
+    </div>
+
+    <div id="illusion-container">
+        <div id="cross">+</div>
+        <div class="dot" style="--i: 0;"></div>
+        <div class="dot" style="--i: 1;"></div>
+        <div class="dot" style="--i: 2;"></div>
+        <div class="dot" style="--i: 3;"></div>
+        <div class="dot" style="--i: 4;"></div>
+        <div class="dot" style="--i: 5;"></div>
+        <div class="dot" style="--i: 6;"></div>
+        <div class="dot" style="--i: 7;"></div>
+        <div class="dot" style="--i: 8;"></div>
+        <div class="dot" style="--i: 9;"></div>
+        <div class="dot" style="--i: 10;"></div>
+        <div class="dot" style="--i: 11;"></div>
+    </div>
+
+    <script>
+const container = document.getElementById('illusion-container');
+const sizeSlider = document.getElementById('size');
+const speedSlider = document.getElementById('speed');
+const rSlider = document.getElementById('red');
+const gSlider = document.getElementById('green');
+const bSlider = document.getElementById('blue');
+const hexDisplay = document.getElementById('hex-display');
+const dots = document.querySelectorAll('.dot');
+
+document.querySelectorAll('#controls input').forEach(input => {
+    // Bi-directional sync
+    input.addEventListener('input', (event) => {
+        if (!event.isTrusted) { return; }
+
+        const targetId = event.target.getAttribute('data-sync');
+        const targetInput = document.getElementById(targetId);
+
+        targetInput.value = event.target.value;
+        targetInput.dispatchEvent(new Event('input'));
+    });
+});
+
+sizeSlider.addEventListener('input', () => {
+    container.style.setProperty('--size', `${sizeSlider.value}vmin`);
+});
+
+(() => { // Colour handling
+    function rgbToHex(r, g, b) {
+        return `#${[r, g, b]
+            .map(c => parseInt(c, 10).toString(16).toUpperCase().padStart(2, '0'))
+            .join('')}`;
+    }
+
+    function updateColour(_event) {
+        const r = rSlider.value;
+        const g = gSlider.value;
+        const b = bSlider.value;
+
+        container.style.setProperty('--color', `rgb(${r}, ${g}, ${b})`);
+        hexDisplay.textContent = rgbToHex(r, g, b);
+    }
+    [rSlider, gSlider, bSlider].forEach(slider => slider.addEventListener('input', updateColour));
+
+    updateColour(); // In case the browser auto-fills the form on page reload
+})();
+
+(() => { // Animation
+    let activeIndex = 0;
+    let intervalId = null;
+
+    function updateAnimation(_event) {
+        clearInterval(intervalId);
+
+        const delay = parseInt(speedSlider.value, 10);
+
+        intervalId = setInterval(() => {
+            activeIndex = (activeIndex + 1) % dots.length;
+            container.setAttribute('data-active', activeIndex);
+        }, delay);
+    }
+
+    speedSlider.addEventListener('input', updateAnimation);
+    updateAnimation();
+})();
+    </script>
+</body>
+</html>
