@@ -1,0 +1,393 @@
+﻿<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hiragana and Katakana Flashcards</title>
+
+<style type="text/css">
+body {
+    font-family: Arial;
+}
+table {
+    border-collapse: collapse;
+    display: inline-block;
+    margin-right: 1em;
+    vertical-align: top;
+}
+thead {
+    background-color: #eee;
+}
+tr:hover {
+    cursor: pointer;
+}
+th[scope="row"] {
+    text-align: left;
+}
+th, td {
+    border: 1px solid black;
+    padding: 0.2em 0.5em;
+}
+
+.hidden #showhide {
+    display: block;
+}
+.hidden > * {
+    display: none;
+}
+#showhide {
+    cursor: pointer;
+}
+.hidden #showhide a:before {
+    content: "Show ";
+}
+#showhide a:before {
+    content: "Hide ";
+}
+
+.selected {
+    background-color: #dfd;
+}
+.selected:hover {
+    background-color: #cfc;
+}
+tbody tr:not(.selected):hover {
+    background-color: #f8f8f8;
+}
+
+.main {
+    display: inline-block;
+    margin-bottom: 1em;
+    text-align: center;
+}
+.main input, button {
+    display: block;
+    max-width: 5em;
+    margin: 0 auto;
+    white-space: nowrap;
+}
+.main button:after {
+    content: "Give up";
+}
+.main.incorrect button:after {
+    content: "Next";
+}
+#symbol {
+    font-size: 300%;
+}
+#answer {
+    color: transparent;
+}
+.incorrect #answer {
+    color: inherit;
+}
+.incorrect input {
+    background-color: #fdd;
+}
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+'use strict';
+
+var allSymbols = [],
+    selectedSymbolIndices = [],
+    $inputContainer = $('#main'),
+    symbol = document.getElementById('symbol'),
+    answer = document.getElementById('answer'),
+    goodValues,
+    $input = $('#input'),
+    $button = $('#button'),
+    $settings = $('#settings');
+
+populateTable({
+    base: [
+        [{a: 'あ'}, {i: 'い'}, {u: 'う'}, {e: 'え'}, {o: 'お'}],
+        [{ka: 'か'}, {ki: 'き'}, {ku: 'く'}, {ke: 'け'}, {ko: 'こ'}],
+        [{sa: 'さ'}, {shi: 'し'}, {su: 'す'}, {se: 'せ'}, {so: 'そ'}],
+        [{ta: 'た'}, {chi: 'ち'}, {tsu: 'つ'}, {te: 'て'}, {to: 'と'}],
+        [{na: 'な'}, {ni: 'に'}, {nu: 'ぬ'}, {ne: 'ね'}, {no: 'の'}],
+        [{ha: 'は'}, {hi: 'ひ'}, {fu: 'ふ'}, {he: 'へ'}, {ho: 'ほ'}],
+        [{ma: 'ま'}, {mi: 'み'}, {mu: 'む'}, {me: 'め'}, {mo: 'も'}],
+        [{ya: 'や'}, null, {yu: 'ゆ'}, null, {yo: 'よ'}],
+        [{ra: 'ら'}, {ri: 'り'}, {ru: 'る'}, {re: 'れ'}, {ro: 'ろ'}],
+        [{wa: 'わ'}, {wi: 'ゐ'}, null, {we: 'ゑ'}, {wo: 'を'}]
+    ],
+    diacritics: [
+        [{ga: 'が'}, {gi: 'ぎ'}, {gu: 'ぐ'}, {ge: 'げ'}, {go: 'ご'}],
+        [{za: 'ざ'}, {ji: 'じ'}, {zu: 'ず'}, {ze: 'ぜ'}, {zo: 'ぞ'}],
+        [{da: 'だ'}, {ji: 'ぢ'}, {zu: 'づ'}, {de: 'で'}, {'do': 'ど'}],
+        [{ba: 'ば'}, {bi: 'び'}, {bu: 'ぶ'}, {be: 'べ'}, {bo: 'ぼ'}],
+        [{pa: 'ぱ'}, {pi: 'ぴ'}, {pu: 'ぷ'}, {pe: 'ぺ'}, {po: 'ぽ'}]
+    ],
+    digraphs: [
+        [{va: 'ゔぁ'}, {vi: 'ゔぃ'}, {vu: 'ゔ'}, {ve: 'ゔぇ'}, {vo: 'ゔぉ'}],
+        [{kya: 'きゃ'}, null, {kyu: 'きゅ'}, null, {kyo: 'きょ'}],
+        [{sha: 'しゃ'}, null, {shu: 'しゅ'}, null, {sho: 'しょ'}],
+        [{cha: 'ちゃ'}, null, {chu: 'ちゅ'}, null, {cho: 'ちょ'}],
+        [{nya: 'にゃ'}, null, {nyu: 'にゅ'}, null, {nyo: 'にょ'}],
+        [{hya: 'ひゃ'}, null, {hyu: 'ひゅ'}, null, {hyo: 'ひょ'}],
+        [{mya: 'みゃ'}, null, {myu: 'みゅ'}, null, {myo: 'みょ'}],
+        [{rya: 'りゃ'}, null, {ryu: 'りゅ'}, null, {ryo: 'りょ'}],
+        [{gya: 'ぎゃ'}, null, {gyu: 'ぎゅ'}, null, {gyo: 'ぎょ'}],
+        [{ja: 'じゃ'}, null, {ju: 'じゅ'}, null, {jo: 'じょ'}],
+        [{ja: 'ぢゃ'}, null, {ju: 'ぢゅ'}, null, {jo: 'ぢょ'}],
+        [{bya: 'びゃ'}, null, {byu: 'びゅ'}, null, {byo: 'びょ'}],
+        [{pya: 'ぴゃ'}, null, {pyu: 'ぴゅ'}, null, {pyo: 'ぴょ'}]
+    ]
+}, document.getElementById('hiragana'));
+
+populateTable({
+    base: [
+        [{a: 'ア'}, {i: 'イ'}, {u: 'ウ'}, {e: 'エ'}, {o: 'オ'}],
+        [{ka: 'カ'}, {ki: 'キ'}, {ku: 'ク'}, {ke: 'ケ'}, {ko: 'コ'}],
+        [{sa: 'サ'}, {shi: 'シ'}, {su: 'ス'}, {se: 'セ'}, {so: 'ソ'}],
+        [{ta: 'タ'}, {chi: 'チ'}, {tsu: 'ツ'}, {te: 'テ'}, {to: 'ト'}],
+        [{na: 'ナ'}, {ni: 'ニ'}, {nu: 'ヌ'}, {ne: 'ネ'}, {no: 'ノ'}],
+        [{ha: 'ハ'}, {hi: 'ヒ'}, {fu: 'フ'}, {he: 'ヘ'}, {ho: 'ホ'}],
+        [{ma: 'マ'}, {mi: 'ミ'}, {mu: 'ム'}, {me: 'メ'}, {mo: 'モ'}],
+        [{ya: 'ヤ'}, null, {yu: 'ユ'}, null, {yo: 'ヨ'}],
+        [{ra: 'ラ'}, {ri: 'リ'}, {ru: 'ル'}, {re: 'レ'}, {ro: 'ロ'}],
+        [{wa: 'ワ'}, {wi: 'ヰ'}, null, {we: 'ヱ'}, {wo: 'ヲ'}]
+    ],
+    diacritics: [
+        [{ga: 'ガ'}, {gi: 'ギ'}, {gu: 'グ'}, {ge: 'ゲ'}, {go: 'ゴ'}],
+        [{za: 'ザ'}, {ji: 'ジ'}, {zu: 'ズ'}, {ze: 'ゼ'}, {zo: 'ゾ'}],
+        [{da: 'ダ'}, {ji: 'ヂ'}, {zu: 'ヅ'}, {de: 'デ'}, {'do': 'ド'}],
+        [{ba: 'バ'}, {bi: 'ビ'}, {bu: 'ブ'}, {be: 'ベ'}, {bo: 'ボ'}],
+        [{pa: 'パ'}, {pi: 'ピ'}, {pu: 'プ'}, {pe: 'ペ'}, {po: 'ポ'}]
+    ],
+    digraphs: [
+        [{va: 'ヴァ'}, {vi: 'ヴィ'}, {vu: 'ヴ'}, {ve: 'ヴェ'}, {vo: 'ヴォ'}],
+        [{kya: 'キャ'}, null, {kyu: 'キュ'}, null, {kyo: 'キョ'}],
+        [{sha: 'シャ'}, null, {shu: 'シュ'}, {she: 'シェ'}, {sho: 'ショ'}],
+        [{cha: 'チャ'}, null, {chu: 'チュ'}, {che: 'チェ'}, {cho: 'チョ'}],
+        [{nya: 'ニャ'}, null, {nyu: 'ニュ'}, null, {nyo: 'ニョ'}],
+        [{hya: 'ヒャ'}, null, {hyu: 'ヒュ'}, null, {hyo: 'ヒョ'}],
+        [{mya: 'ミャ'}, null, {myu: 'ミュ'}, null, {myo: 'ミョ'}],
+        [{rya: 'リャ'}, null, {ryu: 'リュ'}, null, {ryo: 'リョ'}],
+        [{gya: 'ギャ'}, null, {gyu: 'ギュ'}, null, {gyo: 'ギョ'}],
+        [{ja: 'ジャ'}, null, {ju: 'ジュ'}, {je: 'ジェ'}, {jo: 'ジョ'}],
+        [{ja: 'ヂャ'}, null, {ju: 'ヂュ'}, null, {jo: 'ヂョ'}],
+        [{bya: 'ビャ'}, null, {byu: 'ビュ'}, null, {byo: 'ビョ'}],
+        [{pya: 'ピャ'}, null, {pyu: 'ピュ'}, null, {pyo: 'ピョ'}],
+        [{fa: 'ファ'}, {fi: 'フィ'}, null, {fe: 'フェ'}, {fo: 'フォ'}],
+        [null, {wi: 'ウィ'}, null, {we: 'ウェ'}, {wo: 'ウォ'}],
+        [null, {ti: 'ティ'}, {tu: 'トゥ'}, null, null],
+        [null, {di: 'ディ'}, {du: 'ドゥ'}, null, null]
+    ]
+}, document.getElementById('katakana'));
+
+$('#showhide').click(function (evt) {
+    evt.preventDefault();
+    $settings.toggleClass('hidden');
+});
+
+$settings.on('click', 'tr', function (evt) {
+    var tr = this;
+    if (evt.target.tagName !== 'INPUT') {
+        $(tr).find('input').first().trigger('click');
+    }
+});
+
+$settings.on('click', '.js-prefix', function (evt) {
+    var input = evt.currentTarget,
+        $tr = $(input).closest('tr'),
+        callNextSymbol = false,
+        currentAnswer = answer.firstChild.nodeValue,
+        currentSymbol = symbol.firstChild.nodeValue;
+
+    if (input.checked) {
+        $tr.addClass('selected');
+    } else {
+        $tr.removeClass('selected');
+    }
+
+    $.each($tr.get(0).cells, function (i, cell) {
+        if (!cell.hasAttribute('data-romaji')) return;
+        var index = cell.getAttribute('data-index');
+
+        if (input.checked) {
+            selectedSymbolIndices[index] = true;
+        } else {
+            delete selectedSymbolIndices[index];
+            if (!callNextSymbol && currentSymbol === allSymbols[index][currentAnswer]) {
+                callNextSymbol = true;
+            }
+        }
+    });
+
+    if (callNextSymbol) {
+        nextSymbol(true);
+    }
+});
+
+$settings.on('click', '.js-multicheck', function (evt) {
+    var checked = evt.currentTarget.checked;
+    $(evt.currentTarget).closest('tbody, table').first().find('input').each(function (index, input) {
+        if (input.checked !== checked) {
+            $(input).trigger('click');
+        }
+    });
+});
+
+$('.js-multicheck').each(function (index, input) {
+    if (!input.checked) {
+        $(input).trigger('click');
+    }
+});
+
+$input.keyup(function (evt) {
+    $.inArray($input.val().toLowerCase().replace(/\s/g, ''), goodValues) >= 0 && nextSymbol();
+});
+
+$button.click(function () {
+    if ($inputContainer.hasClass('incorrect')) {
+        nextSymbol();
+    } else {
+        $inputContainer.addClass('incorrect');
+    }
+});
+
+nextSymbol();
+
+function populateTable(data, table) {
+    $.each(data, function (name, rows) {
+        var tbody = document.createElement('tbody'),
+            tr = tbody.insertRow(-1),
+            th = document.createElement('th'),
+            input = document.createElement('input');
+
+        input.type = 'checkbox';
+        input.className = 'js-multicheck';
+        th.colSpan = 6;
+
+        th.appendChild(input);
+        th.appendChild(document.createTextNode(name));
+        tr.appendChild(th);
+        table.appendChild(tbody);
+
+        $.each(rows, function (index, row) {
+            var tr = tbody.insertRow(-1),
+                th = document.createElement('th'),
+                input = document.createElement('input'),
+                prefix;
+
+            tr.appendChild(th);
+            tr.checkbox = input;
+            th.appendChild(input);
+            th.scope = 'row';
+            input.type = 'checkbox';
+            input.className = 'js-prefix';
+
+            $.each(row, function (index, item) {
+                var td = tr.insertCell(-1);
+                if (item === null) return true;
+                for (var romaji in item) {
+                    if (item.hasOwnProperty(romaji)) {
+                        td.appendChild(document.createTextNode(item[romaji]));
+                        td.setAttribute('data-romaji', romaji);
+                        td.setAttribute('data-symbol', item[romaji]);
+                        td.setAttribute('data-index', allSymbols.length);
+                        prefix = romaji.substring(0, romaji.length - 1);
+                        break;
+                    }
+                }
+                allSymbols.push(item);
+            });
+
+            th.appendChild(document.createTextNode(prefix));
+        });
+    });
+}
+
+function nextSymbol(suppressFocus) {
+    var current,
+        romaji,
+        item,
+        symbolText;
+
+    if ($.isEmptyObject(selectedSymbolIndices)) {
+        if (!suppressFocus) {
+            window.alert('Please check at least one of the rows.');
+        }
+        return;
+    }
+
+    current = symbol.firstChild.nodeValue;
+    symbolText = current;
+    while (symbolText === current) {
+        item = allSymbols[getRandomObjectKey(selectedSymbolIndices)];
+        for (romaji in item) {
+            if (item.hasOwnProperty(romaji)) {
+                symbolText = item[romaji];
+                break;
+            }
+        }
+    }
+
+    symbol.replaceChild(document.createTextNode(item[romaji]), symbol.firstChild);
+    answer.replaceChild(document.createTextNode(romaji), answer.firstChild);
+    goodValues = [item[romaji], romaji];
+    $input.val('');
+    $inputContainer.removeClass('incorrect');
+    if (!suppressFocus) {
+        $input.focus();
+    }
+}
+
+function getRandomObjectKey(obj) {
+    var keys = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            keys.push(key);
+        }
+    }
+    return keys[Math.floor(Math.random() * keys.length)];
+}
+
+});
+</script>
+    </head>
+    <body>
+
+<div id="main" class="main">
+    <div id="symbol"> </div>
+    <div id="answer"> </div>
+    <input type="text" id="input" autocomplete="off" spellcheck="false" />
+    <button id="button"></button>
+</div>
+
+<div id="settings">
+    <div id="showhide"><a href="#">selection</a></div>
+
+    <table id="hiragana">
+        <caption>Hiragana</caption>
+        <thead>
+            <tr>
+                <th scope="row"><input type="checkbox" class="js-multicheck" /></th>
+                <th>a</th>
+                <th>i</th>
+                <th>u</th>
+                <th>e</th>
+                <th>o</th>
+            </tr>
+        </thead>
+    </table>
+
+    <table id="katakana">
+        <caption>Katakana</caption>
+        <thead>
+            <tr>
+                <th scope="row"><input type="checkbox" class="js-multicheck" /></th>
+                <th>a</th>
+                <th>i</th>
+                <th>u</th>
+                <th>e</th>
+                <th>o</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+    </body>
+</html>

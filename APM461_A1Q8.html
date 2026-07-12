@@ -1,0 +1,963 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>APM461 A1Q8</title>
+<script type="text/javascript">
+window.onload = function() {
+    var x = [0, 2, 0.5, 1.5, 1.5, 0.5];
+    var y = [Math.sqrt(3)/2, Math.sqrt(3)/2, 0, 0, Math.sqrt(3), Math.sqrt(3)];
+    
+    var multiplier = 100;
+    for (var i = 0; i < x.length; i++) {
+        x[i] *= multiplier;
+        y[i] *= multiplier;
+    }
+
+    var c1 = 'red', c2 = 'blue', width = 250, height = 200;
+    var canvas;
+    var context;
+    
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+document.body.appendChild(canvas)
+context = canvas.getContext('2d');
+context.strokeStyle = c1;
+context.moveTo(x[0], y[0])
+context.lineTo(x[2], y[2])
+context.moveTo(x[1], y[1])
+context.lineTo(x[2], y[2])
+context.moveTo(x[0], y[0])
+context.lineTo(x[3], y[3])
+context.moveTo(x[1], y[1])
+context.lineTo(x[3], y[3])
+context.moveTo(x[2], y[2])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[5], y[5])
+context.moveTo(x[4], y[4])
+context.lineTo(x[5], y[5])
+context.stroke();
+context.beginPath();
+context.strokeStyle = c2;
+context.moveTo(x[2], y[2])
+context.lineTo(x[3], y[3])
+context.moveTo(x[0], y[0])
+context.lineTo(x[4], y[4])
+context.moveTo(x[1], y[1])
+context.lineTo(x[4], y[4])
+context.moveTo(x[3], y[3])
+context.lineTo(x[4], y[4])
+context.moveTo(x[0], y[0])
+context.lineTo(x[5], y[5])
+context.moveTo(x[1], y[1])
+context.lineTo(x[5], y[5])
+context.moveTo(x[2], y[2])
+context.lineTo(x[5], y[5])
+context.stroke();
+
+};
+</script>
+</head>
+
+<body>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Doom 3 Locker and Door Codes</title>
+<style type="text/css">
+body {
+    background-color: white;
+    color: black;
+    font-family: Arial;
+    font-size: small;
+}
+noscript {
+    color: red;
+    font-size: larger;
+    font-weight: bold;
+}
+body > table {
+    border: solid 1px black;
+    float: left;
+    margin-right: 1em;
+}
+body > table > caption {
+    font-weight: bold;
+}
+body > table > tbody > tr > td {
+    vertical-align: top;
+}
+th {
+    cursor: pointer;
+    color: blue;
+}
+
+.id {
+    font-family: Courier New;
+    text-align: center;
+}
+.code {
+    font-family: Courier New;
+    text-align: center;
+}
+.order {
+    padding-right: 1em !important;
+    text-align: right;
+}
+.level {
+}
+.location {
+}
+
+td > table.list {
+    margin-right: 1em;
+}
+table.list {
+    border-collapse: collapse;
+}
+.list td {
+    border-top: solid 1px silver;
+    padding: 2px;
+}
+.note {
+    margin-bottom: 1em;
+}
+.note:before {
+    content: "Note: ";
+    font-style: italic;
+}
+</style>
+<script type="text/javascript">
+var games = [
+    {name: 'Doom 3', lockers: [
+            {id: '001', code: '396', level: 'Mars City 1'},
+            {id: '023', code: '531', level: 'Mars City Underground'},
+            {id: '017', code: '347', level: 'Mars City 2'},
+            {id: '013', code: '586', level: 'Adminstration'},
+            {id: 'MB1', code: '0508', level: 'Administration'},
+            {id: '009', code: '752', level: 'Alpha Labs 1'},
+            {id: '038', code: '409', level: 'Alpha Labs 2'},
+            {id: '039', code: '102', level: 'Alpha Labs 2'},
+            {id: '047', code: '123', level: 'Alpha Labs 3'},
+            {id: '048', code: '123', level: 'Alpha Labs 3'},
+            {id: '049', code: '123', level: 'Alpha Labs 3'},
+            {id: '064', code: '651', level: 'Alpha Labs 4'},
+            {id: '063', code: '972', level: 'EnPro'},
+            {id: '054', code: '246', level: 'Communications'},
+            {id: '003', code: '483', level: 'Recycling 2'},
+            {id: '054', code: '142', level: 'Monorail'},
+            {id: '078', code: '364', level: 'Monorail'},
+            {id: '079', code: '364', level: 'Monorail'},
+            {id: '21D', code: '298', level: 'Delta 1'},
+            {id: '112', code: '538', level: 'Delta 2A'},
+            {id: '114', code: '715', level: 'Delta 2A'},
+            {id: '116', code: '972', level: 'Delta 2A'},
+            {id: '103', code: '259', level: 'Delta 2B'},
+            {id: '116', code: '624', level: 'Delta 2B'},
+            {id: '117', code: '624', level: 'Delta 2B'},
+            {id: '213', code: '371', level: 'Delta 2B'},
+            {id: '666', code: '372', level: 'Delta 2B'},
+            {id: 'MB2', code: '0508', level: 'Delta 2B'},
+            {id: '386', code: '836', level: 'Delta 3'},
+            {id: '387', code: '836', level: 'Delta 3'},
+            {id: '317', code: '841', level: 'Delta 3'},
+            {id: '104', code: '579', level: 'Delta 4'},
+            {id: '452', code: '571', level: 'CPU'},
+            {id: '669', code: '468', level: 'CPU'}
+    ], misc: [
+            {name: 'MCU fire valve', code: '842'},
+            {name: 'Mars City 2 armory', code: '584'},
+            {name: 'EnPro storage', code: '734'},
+            {name: 'Monorail airlock', code: '826'},
+            {name: 'Delta 2A office', code: '931'},
+            {name: 'Delta 2B storage', code: '725'},
+            {name: 'Delta 2B exit', code: '463'},
+            {name: 'CPU door', code: '627'}
+    ]},
+    
+    {name: 'Resurrection of Evil', lockers: [
+        {id: '029', code: '516', level: 'Erebus 2'},
+        {id: '105', code: '769', level: 'Erebus 3'},
+        {id: '407', code: '937', level: 'Erebus 4'},
+        {id: '408', code: '937', level: 'Erebus 4'},
+        {id: '034', code: '134', level: 'Erebus 6'},
+        {id: '035', code: '134', level: 'Erebus 6'},
+        {id: '042', code: '714', level: 'Phobos 1'},
+        {id: '009', code: '492', level: 'Phobos 3'},
+        {id: '116', code: '634', level: 'Delta Labs'},
+        {id: '117', code: '634', level: 'Delta Labs'}
+    ], misc: [
+        {name: 'Sarge\'s office shelf', code: '428'},
+        {name: 'Phobos 2 bridge', code: '281'}
+    ]}
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+    for (var i = 0; i < games.length; i++) {
+        var container = document.createElement('table');
+        document.body.appendChild(container);
+        
+        container.createCaption();
+        container.caption.appendChild(document.createTextNode(games[i].name));
+        
+        var containerRow = container.insertRow(0);
+        
+        if (games[i].lockers.length > 0) {
+            var lockers = document.createElement('table');
+            var tdLockers = containerRow.insertCell(-1);
+            tdLockers.appendChild(lockers);
+            lockers.className = 'list';
+            
+            lockers.createCaption();
+            lockers.caption.appendChild(document.createTextNode('Lockers'));
+            
+            var headingRow = lockers.insertRow(0);
+            var headings = ['Order', 'ID', 'Code', 'Level'];
+            for (var j = 0; j < headings.length; j++) {
+                var th = document.createElement('th');
+                headingRow.appendChild(th);
+                th.appendChild(document.createTextNode(headings[j]));
+                th.className = 'sorttable_alpha';
+            }
+            headingRow.firstChild.className = 'sorttable_numeric' // Evil
+            
+            for (var j = 0; j < games[i].lockers.length; j++) {
+                var tr = lockers.insertRow(j + 1);
+                
+                var order = tr.insertCell(-1);
+                order.appendChild(document.createTextNode(j + 1));
+                order.className = 'order';
+                
+                var id = tr.insertCell(-1);
+                id.appendChild(document.createTextNode(games[i].lockers[j].id));
+                id.className = 'id';
+                
+                var code = tr.insertCell(-1);
+                code.appendChild(document.createTextNode(games[i].lockers[j].code));
+                code.className = 'code';
+                
+                var level = tr.insertCell(-1);
+                level.appendChild(document.createTextNode(games[i].lockers[j].level));
+                level.className = 'level';
+            }
+            
+            sorttable.makeSortable(lockers);
+        }
+        
+        if (games[i].misc.length > 0) {
+            var misc = document.createElement('table');
+            var tdMisc = containerRow.insertCell(-1);
+            tdMisc.appendChild(misc);
+            misc.className = 'list sortable';
+            
+            misc.createCaption();
+            misc.caption.appendChild(document.createTextNode('Misc'));
+            
+            var headingRow = misc.insertRow(0);
+            var headings = ['Location', 'Code'];
+            for (var j = 0; j < headings.length; j++) {
+                var th = document.createElement('th');
+                headingRow.appendChild(th);
+                th.appendChild(document.createTextNode(headings[j]));
+            }
+            
+            for (var j = 0; j < games[i].misc.length; j++) {
+                var tr = misc.insertRow(j + 1);
+                
+                var location = tr.insertCell(-1);
+                location.appendChild(document.createTextNode(games[i].misc[j].name));
+                location.className = 'location';
+                
+                var code = tr.insertCell(-1);
+                code.appendChild(document.createTextNode(games[i].misc[j].code));
+                code.className = 'code';
+            }
+
+            sorttable.makeSortable(misc);
+        }
+    }
+});
+</script>
+<script type="text/javascript" src="sorttable.js"></script>
+</head>
+<body>
+<noscript><div>Please enable JavaScript and then refresh the page.</div></noscript>
+</body>
+</html>

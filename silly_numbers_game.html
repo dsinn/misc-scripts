@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Silly Numbers Game</title>
+
+<style type="text/css">
+body {
+    font-family: Arial;
+}
+noscript {
+    color: red;
+    font-weight: bold;
+}
+td.highlighted {background-color: yellow;}
+div#outContainer{
+    color: purple;
+    height: 2em;
+}
+
+table#mainTable {border-collapse: collapse;}
+table#mainTable > tr > td, table#mainTable > * > tr > td {
+    border: solid 1px black;
+}
+td {
+    padding: 0.2em;
+    text-align: center;
+}
+</style>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+'use strict';
+
+// Constants
+var powers = [32, 2, 1, 4, 16, 8];
+
+var positions = [
+    'top-left', 'top-right',
+    'middle-left', 'middle-right',
+    'bottom-left', 'bottom-right'
+];
+
+// Globals
+var highlighted = [];
+var valueTds = [];
+
+function initialize() {
+    document.getElementById('input').focus();
+
+    var tds0 = document.getElementsByTagName('td');
+    var tds = [];
+    for (var i = 0; i < tds0.length; i++) {
+        tds.push(tds0[i]);
+    }
+
+    for (var i = 0; i < tds.length; i++) {
+        var table = document.createElement('table');
+        tds[i].appendChild(table);
+
+        var values = [];
+        for (var j = 1, count = 0; j <= 60; j++) {
+            if ((j & powers[i]) !== 0) {
+                values.push(j);
+            }
+        }
+
+        // Add some redundant values to fill up the box
+        while (values.length < 30) {
+            values.push(values[Math.floor(Math.random() * values.length)]);
+        }
+        //values = randomizeArray(values);
+
+        valueTds[i] = [];
+        var tr;
+        for (var j = 0; j < values.length; j++) {
+            if (j % 6 === 0) {
+                tr = table.insertRow(-1);
+            }
+            var tdValue = tr.insertCell(-1);
+            tdValue.appendChild(document.createTextNode(values[j]));
+            valueTds[i][values[j]] = tdValue;
+        }
+    }
+}
+
+/**
+ * Empties the given array and returns a randomized version of it.
+ */
+function randomizeArray(x) {
+    var y = [x.splice(0, 1)];
+    while (x.length > 0) {
+        y.push(x.splice(Math.floor(Math.random() * x.length), 1));
+    }
+    return y;
+}
+
+/**
+ * Highlights the numbers in the table that match the input.
+ */
+function highlight(evt) {
+    var input = evt.currentTarget;
+    input.value = input.value.replace(/\D/g, '');
+    var x = parseInt(input.value, 10);
+
+    var outContainer = document.getElementById('outContainer');
+    while (outContainer.hasChildNodes()) {
+        outContainer.removeChild(outContainer.firstChild);
+    }
+
+    // Remove previous highlights
+    for (var i = 0; i < highlighted.length; i++) {
+        highlighted[i].className = '';
+    }
+    highlighted = []; // Reset
+
+    var output;
+    if (isNaN(x)) {
+        output = '';
+    } else if (1 > x || x > 60) {
+        output = '"' + x + '" is not between 1 and 60.';
+    } else {
+        var contained = [];
+        for (var i = 0; i < powers.length; i++) {
+            if ((x & powers[i]) !== 0) {
+                contained.push(positions[i]);
+                highlighted.push(valueTds[i][x]);
+            }
+        }
+
+        if (contained.length) {
+            output = 'Your number is found in the ' + contained.join(', ').replace(/,([^,]*$)/, ' and$1') + '.';
+        } else {
+            output = 'Your number is not in any of the boxes.';
+        }
+
+        for (var i = 0; i < highlighted.length; i++) {
+            highlighted[i].className = 'highlighted';
+        }
+    }
+
+    outContainer.appendChild(document.createTextNode(output));
+}
+
+initialize();
+document.getElementById('input').addEventListener('keyup', highlight);
+
+});
+</script>
+</head>
+<body>
+<noscript><div>JavaScript must be enabled.</div></noscript>
+
+<h3>How to Play:</h3>
+<ol>
+    <li>Pick a number from 1&ndash;60.</li>
+    <li>Determine exactly which of the six boxes contain your number.</li>
+    <li>Tell the other player which boxes those are without saying your number.</li>
+    <li>If the other player knows the solution to this game, then they should be able to determine which number you picked within seconds.</li>
+</ol>
+
+<div>
+    Pick a number from 1&ndash;60:
+    <input type="text" id="input" size="2" maxlength="2" />
+</div>
+
+<div id="outContainer"></div>
+
+<table id="mainTable">
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+</body>
+</html>

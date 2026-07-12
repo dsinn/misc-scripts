@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Touhou translations helper</title>
+        <style>
+html, body {
+    height: 100%;
+}
+body {
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+}
+#settings {
+    display: block;
+    margin-bottom: 1em;
+}
+table {
+    background-color: white;
+    color: black;
+}
+.textboxes {
+    columns: 2;
+    flex-grow: 1;
+}
+textarea {
+    font-family: monospace;
+    height: 100%;
+    width: 100%;
+}
+textarea[readonly] {
+    background-color: lightgrey;
+}
+        </style>
+        <script>
+document.addEventListener('DOMContentLoaded', () => {
+    'use strict';
+
+    const inputElement = document.getElementById('input');
+    const outputElement = document.getElementById('output');
+    const sectionRegexes = {
+        kan: /(?:[\u0100-\uffff])+/g,
+        rom: /(?:w[ao]|[dt]?[sz]u|(?:[kstnhmyrgdbp])?[aiueo]|(?:[cs]|ss)h[aiuo]|([kpt])\1[aiueo]|fu|n\b|[!-@])+/gi
+    };
+
+    inputElement.addEventListener('keyup', () => {
+        let sections = {};
+        let outputString = '';
+
+        for (let sectionType in sectionRegexes) {
+            sections[sectionType] = [];
+        }
+        sections.eng = [];
+
+        for (let section of inputElement.value.trim().split(/\n{2,}/)) {
+            let bestMatch = 'eng';
+
+            for (let sectionType in sectionRegexes) {
+                let re = sectionRegexes[sectionType],
+                    matchesLength = 0,
+                    match;
+
+                re.lastIndex = 0;
+
+                while (match = re.exec(section)) {
+                    console.log(sectionType, match);
+                    matchesLength += match[0].length;
+                }
+
+                if (matchesLength / section.replace(/\s/g, '').length > document.forms['settings'].elements[`threshold[${sectionType}]`].value) {
+                    bestMatch = sectionType;
+                    break;
+                }
+            }
+
+            sections[bestMatch].push(section);
+        }
+
+        for (let sectionType in sections) {
+            if (!sections[sectionType].length) {
+                continue;
+            }
+
+            outputString += '\n\n';
+            for (let i = 0; i < sections[sectionType].length; i++) {
+                outputString += `|${sectionType}${i + 1}=\n${sections[sectionType][i]}\n`;
+            }
+        }
+
+        outputElement.value = outputString.trim();
+    });
+
+    outputElement.addEventListener('click', function(evt) {
+        evt.currentTarget.focus();
+        evt.currentTarget.select();
+    });
+});
+        </script>
+    </head>
+    <body>
+        <div>
+            <form id="settings">
+                <table>
+                    <tr>
+                        <td>Kanji match threshold:</td>
+                        <td><input type="range" name="threshold[kan]" min="0" max="1" step="0.01" value="0.2" /></td>
+                    </tr>
+                    <tr>
+                        <td>Romaji match threshold:</td>
+                        <td><input type="range" name="threshold[rom]" min="0" max="1" step="0.01" value="0.8" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <div class="textboxes">
+            <textarea id="input"></textarea>
+            <textarea id="output" readonly></textarea>
+        </div>
+    </body>
+</html>

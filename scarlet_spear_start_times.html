@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Scarlet Spear &ndash; Start times</title>
+    <style>
+        body {
+            background-color: #454545;
+            color: white;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 150%;
+        }
+
+main {
+    align-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-width: 1060px;
+}
+
+div {
+    display: inline-block;
+    margin-right: 0.5em;
+    vertical-align: bottom;
+    flex-basis: 13%;
+}
+
+h2 {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px 10px 0 0;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    padding: 4px 5px 2px 5px;
+    text-align: center;
+}
+
+ul {
+    background: rgba(255,255,255,0.1);
+    border-radius: 0 0 10px 10px;
+    height: 12em;
+    list-style: none;
+    margin: 0 0 8px 0;
+    padding: 2px 5px 5px 5px;
+    text-align: center;
+}
+    </style>
+</head>
+<body>
+    <h1>Scarlet Spear &ndash; Start times</h1>
+    <main id="main"></main>
+
+    <script
+        crossorigin="anonymous"
+        integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo="
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"
+    ></script>
+    <script>
+        (() => {
+            const
+                main = document.getElementById('main'),
+                startTime = 1585070400,
+                endTime = 1588096800,
+                period = 11400,
+                modulo = startTime % period,
+                currentTime = new Date().getTime() / 1000
+            ;
+
+            if (currentTime > endTime) {
+                const container = document.createElement('div');
+                document.body.appendChild(container);
+                container.appendChild(document.createTextNode('The event has ended.'));
+                return;
+            }
+
+            let cycleTime = currentTime - currentTime % period + modulo;
+
+            if (cycleTime > currentTime) {
+                // Ensure we don't pass the current cycle
+                cycleTime -= period;
+            }
+
+            let cycleObject = moment(cycleTime, 'X'),
+                prevDayOfYear = -1,
+                timeList;
+
+            for (let i = Math.floor((endTime - currentTime) / period); i >= 0; i--) {
+                if (prevDayOfYear !== cycleObject.dayOfYear()) {
+                    const dateContainer = document.createElement('div');
+                    main.appendChild(dateContainer);
+
+                    const date = document.createElement('h2');
+                    date.appendChild(document.createTextNode(cycleObject.format('ddd, MMMM D')));
+                    dateContainer.appendChild(date);
+
+                    timeList = document.createElement('ul');
+                    dateContainer.appendChild(timeList);
+                }
+
+                const li = document.createElement('li');
+                li.appendChild(document.createTextNode(cycleObject.format('hh:mma').replace(/^0/, '\u2007')));
+                timeList.appendChild(li);
+
+                prevDayOfYear = cycleObject.dayOfYear();
+                cycleObject = cycleObject.add(period, 'second');
+            }
+        })();
+    </script>
+</body>
+</html>

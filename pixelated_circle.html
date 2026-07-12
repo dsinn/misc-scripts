@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Pixelated Circle Drawer</title>
+<style type="text/css">
+table#mytable {
+    border-collapse: collapse;
+    padding: 0px;
+}
+#mytable td {
+    border: solid 1px blue;
+    padding: 0px;
+}
+td.filled {
+    background-color: black;
+}
+</style>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+
+// Data
+var blockWidth;
+var cells = [];
+
+function draw() {
+    // Remove previous drawing
+    while (cells.length > 0) {
+        cells.pop();
+    }
+    var table = document.getElementById('mytable');
+    while (table.hasChildNodes()) {
+        table.removeChild(table.firstChild);
+    }
+    
+    var firstFill = [];
+    var radius = parseInt(document.getElementById('diameter').value, 10);
+    var lastIntegral = integral(radius, -1 * radius);
+    for (var i = 1; i <= radius; i++) {
+        var temp = integral(radius, i - radius);
+        firstFill.push(radius - Math.round(temp - lastIntegral));
+        lastIntegral = temp;
+    }
+    
+    for (var i = 0; i < radius; i++) {
+        for (var k = 0; k < 2; k++) {
+            var tr = table.insertRow(i);
+            // Left uncoloured cells
+            for (var j = 0; j < firstFill[i]; j++) {
+                var td = tr.insertCell(-1);
+                td.style.height = blockWidth;
+                td.style.width = blockWidth;
+                cells.push(td);
+            }
+            // Middle coloured cells
+            for (var j = firstFill[i]; j < 2 * radius - firstFill[i]; j++) {
+                var td = tr.insertCell(-1);
+                td.className = 'filled';
+                td.style.height = blockWidth;
+                td.style.width = blockWidth;
+                cells.push(td);
+            }
+            // Right uncoloured cells
+            for (var j = 2 * radius - firstFill[i]; j < radius * 2; j++) {
+                var td = tr.insertCell(-1);
+                td.style.height = blockWidth;
+                td.style.width = blockWidth;
+                cells.push(td);
+            }
+        }
+    }
+}
+
+function integral(r, x) {
+    return (r * r * Math.asin(x / r) + Math.sqrt(r - x) * x * Math.sqrt(x + r)) / 2;
+}
+
+function updateBlockWidth() {
+    blockWidth = document.getElementById('blockwidth').value;
+    for (var i in cells) {
+        cells[i].style.height = blockWidth;
+        cells[i].style.width = blockWidth;
+    }
+}
+
+blockWidth = document.getElementById('blockwidth').value;
+draw();
+
+document.getElementById('blockwidth').addEventListener('change', updateBlockWidth);
+document.getElementById('diameter').addEventListener('keyup', draw);
+    
+});
+</script>
+</head>
+<body>
+<div>Press Enter while a text field is selected to re-draw the circle.</div>
+<table>
+    <tr>
+        <td>Block width</td>
+        <td><input type="text" id="blockwidth" size="5" value="1em"></td>
+    </tr>
+    <tr>
+        <td>Circle radius (in blocks)</td>
+        <td><input type="text" id="diameter" size="5" value="5"></td>
+    </tr>
+</table>
+<table id="mytable">
+    <tr>
+        <td></td>
+    </tr>
+</table>
+</body>
+</html>

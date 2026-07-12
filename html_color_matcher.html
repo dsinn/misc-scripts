@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>HTML Color Matcher</title>
+<style type="text/css">
+body {
+    background-color: black;
+    color: white;
+    font-family: Arial;
+}
+
+input[type=text], td.hex, td.rgb {font-family: Courier New;}
+
+#results table {
+    border-collapse: collapse;
+}
+#results th, td {
+    border: solid 1px white;
+    padding: 4px;
+}
+#results td.rank {
+    text-align: right;
+}
+</style>
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+'use strict';
+
+var input;
+
+var colors = [
+{name: 'AliceBlue', red: 240, green: 248, blue: 255},
+{name: 'AntiqueWhite', red: 250, green: 235, blue: 215},
+{name: 'Aquamarine', red: 127, green: 255, blue: 212},
+{name: 'Azure', red: 240, green: 255, blue: 255},
+{name: 'Beige', red: 245, green: 245, blue: 220},
+{name: 'Black', red: 0, green: 0, blue: 0},
+{name: 'BlanchedAlmond', red: 255, green: 235, blue: 205},
+{name: 'Blue', red: 0, green: 0, blue: 255},
+{name: 'Brown', red: 165, green: 42, blue: 42},
+{name: 'BurlyWood', red: 222, green: 184, blue: 135},
+{name: 'CadetBlue', red: 95, green: 158, blue: 160},
+{name: 'Chocolate', red: 210, green: 105, blue: 30},
+{name: 'Coral', red: 255, green: 127, blue: 80},
+{name: 'CornflowerBlue', red: 100, green: 149, blue: 237},
+{name: 'Crimson', red: 220, green: 20, blue: 60},
+{name: 'Cyan', red: 0, green: 255, blue: 255},
+{name: 'DarkBlue', red: 0, green: 0, blue: 139},
+{name: 'DarkGoldenRod', red: 184, green: 134, blue: 11},
+{name: 'DarkGrey', red: 169, green: 169, blue: 169},
+{name: 'DarkKhaki', red: 189, green: 183, blue: 107},
+{name: 'DarkMagenta', red: 139, green: 0, blue: 139},
+{name: 'DarkOliveGreen', red: 85, green: 107, blue: 47},
+{name: 'DarkOrchid', red: 153, green: 50, blue: 204},
+{name: 'DarkRed', red: 139, green: 0, blue: 0},
+{name: 'DarkSalmon', red: 233, green: 150, blue: 122},
+{name: 'DarkSlateBlue', red: 72, green: 61, blue: 139},
+{name: 'DarkSlateGrey', red: 47, green: 79, blue: 79},
+{name: 'DarkViolet', red: 148, green: 0, blue: 211},
+{name: 'DeepPink', red: 255, green: 20, blue: 147},
+{name: 'DeepSkyBlue', red: 0, green: 191, blue: 255},
+{name: 'DimGrey', red: 105, green: 105, blue: 105},
+{name: 'DodgerBlue', red: 30, green: 144, blue: 255},
+{name: 'FireBrick', red: 178, green: 34, blue: 34},
+{name: 'ForestGreen', red: 34, green: 139, blue: 34},
+{name: 'Fuchsia', red: 255, green: 0, blue: 255},
+{name: 'Gainsboro', red: 220, green: 220, blue: 220},
+{name: 'Gold', red: 255, green: 215, blue: 0},
+{name: 'GoldenRod', red: 218, green: 165, blue: 32},
+{name: 'Grey', red: 128, green: 128, blue: 128},
+{name: 'Green', red: 0, green: 128, blue: 0},
+{name: 'GreenYellow', red: 173, green: 255, blue: 47},
+{name: 'HoneyDew', red: 240, green: 255, blue: 240},
+{name: 'IndianRed', red: 205, green: 92, blue: 92},
+{name: 'Indigo', red: 75, green: 0, blue: 130},
+{name: 'Ivory', red: 255, green: 255, blue: 240},
+{name: 'Lavender', red: 230, green: 230, blue: 250},
+{name: 'LavenderBlush', red: 255, green: 240, blue: 245},
+{name: 'LawnGreen', red: 124, green: 252, blue: 0},
+{name: 'LightBlue', red: 173, green: 216, blue: 230},
+{name: 'LightCoral', red: 240, green: 128, blue: 128},
+{name: 'LightCyan', red: 224, green: 255, blue: 255},
+{name: 'LightGrey', red: 211, green: 211, blue: 211},
+{name: 'LightGreen', red: 144, green: 238, blue: 144},
+{name: 'LightSalmon', red: 255, green: 160, blue: 122},
+{name: 'LightSeaGreen', red: 32, green: 178, blue: 170},
+{name: 'LightSkyBlue', red: 135, green: 206, blue: 250},
+{name: 'LightSlateGrey', red: 119, green: 136, blue: 153},
+{name: 'LightSteelBlue', red: 176, green: 196, blue: 222},
+{name: 'LightYellow', red: 255, green: 255, blue: 224},
+{name: 'Lime', red: 0, green: 255, blue: 0},
+{name: 'LimeGreen', red: 50, green: 205, blue: 50},
+{name: 'Linen', red: 250, green: 240, blue: 230},
+{name: 'Magenta', red: 255, green: 0, blue: 255},
+{name: 'MediumAquaMarine', red: 102, green: 205, blue: 170},
+{name: 'MediumBlue', red: 0, green: 0, blue: 205},
+{name: 'MediumOrchid', red: 186, green: 85, blue: 211},
+{name: 'MediumSeaGreen', red: 60, green: 179, blue: 113},
+{name: 'MediumSlateBlue', red: 123, green: 104, blue: 238},
+{name: 'MediumSpringGreen', red: 0, green: 250, blue: 154},
+{name: 'MediumVioletRed', red: 199, green: 21, blue: 133},
+{name: 'MidnightBlue', red: 25, green: 25, blue: 112},
+{name: 'MintCream', red: 245, green: 255, blue: 250},
+{name: 'Moccasin', red: 255, green: 228, blue: 181},
+{name: 'NavajoWhite', red: 255, green: 222, blue: 173},
+{name: 'Navy', red: 0, green: 0, blue: 128},
+{name: 'Olive', red: 128, green: 128, blue: 0},
+{name: 'OliveDrab', red: 107, green: 142, blue: 35},
+{name: 'Orange', red: 255, green: 165, blue: 0},
+{name: 'Orchid', red: 218, green: 112, blue: 214},
+{name: 'PaleGoldenRod', red: 238, green: 232, blue: 170},
+{name: 'PaleGreen', red: 152, green: 251, blue: 152},
+{name: 'PaleVioletRed', red: 216, green: 112, blue: 147},
+{name: 'PapayaWhip', red: 255, green: 239, blue: 213},
+{name: 'PeachPuff', red: 255, green: 218, blue: 185},
+{name: 'Pink', red: 255, green: 192, blue: 203},
+{name: 'Plum', red: 221, green: 160, blue: 221},
+{name: 'PowderBlue', red: 176, green: 224, blue: 230},
+{name: 'Red', red: 255, green: 0, blue: 0},
+{name: 'RosyBrown', red: 188, green: 143, blue: 143},
+{name: 'RoyalBlue', red: 65, green: 105, blue: 225},
+{name: 'Salmon', red: 250, green: 128, blue: 114},
+{name: 'SandyBrown', red: 244, green: 164, blue: 96},
+{name: 'SeaGreen', red: 46, green: 139, blue: 87},
+{name: 'Sienna', red: 160, green: 82, blue: 45},
+{name: 'Silver', red: 192, green: 192, blue: 192},
+{name: 'SkyBlue', red: 135, green: 206, blue: 235},
+{name: 'SlateGrey', red: 112, green: 128, blue: 144},
+{name: 'Snow', red: 255, green: 250, blue: 250},
+{name: 'SteelBlue', red: 70, green: 130, blue: 180},
+{name: 'Tan', red: 210, green: 180, blue: 140},
+{name: 'Teal', red: 0, green: 128, blue: 128},
+{name: 'Tomato', red: 255, green: 99, blue: 71},
+{name: 'Turquoise', red: 64, green: 224, blue: 208},
+{name: 'Violet', red: 238, green: 130, blue: 238},
+{name: 'White', red: 255, green: 255, blue: 255},
+{name: 'WhiteSmoke', red: 245, green: 245, blue: 245},
+{name: 'Yellow', red: 255, green: 255, blue: 0}
+];
+
+function colorDiff(r1, g1, b1, r2, g2, b2) {
+    var y1 = r1 * 0.2125 + g1 * 0.7154 + b1 * 0.0721;
+    var u1 = b1 - y1;
+    var v1 = r1 - y1;
+    var y2 = r2 * 0.2125 + g2 * 0.7154 + b2 * 0.0721;
+    var u2 = b2 - y1;
+    var v2 = r2 - y1;
+
+    var dy = y1 - y2;
+    var du = u1 - u2;
+    var dv = v1 - v2;
+    return 2 * dy * dy + du * du + dv * dv;
+}
+
+function match(evt) {
+    var hex = evt.currentTarget.value;
+    if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
+        return;
+    }
+    var r = parseInt(hex.substring(0, 2), 16);
+    var g = parseInt(hex.substring(2, 4), 16);
+    var b = parseInt(hex.substring(4), 16);
+    var results = [];
+    for (var i = 0; i < colors.length; i++) {
+        results.push({color: colors[i], diff: colorDiff(r, g, b, colors[i].red,
+                colors[i].green, colors[i].blue)});
+    }
+    sort(results);
+
+    var container = document.getElementById('results');
+    while (container.hasChildNodes()) {
+        container.removeChild(container.firstChild);
+    }
+    var table = document.createElement('table');
+    container.appendChild(table);
+
+    // Headings
+    var headings = ['Rank', '#' + hex, 'Preview', 'Name', 'Hex', 'rgb()', 'Diff (debug)'];
+    var trHeadings = table.insertRow(-1);
+    for (var i = 0; i < headings.length; i++) {
+        var th = document.createElement('th');
+        th.appendChild(document.createTextNode(headings[i]));
+        trHeadings.appendChild(th);
+    }
+
+    // Body
+    for (var i = 0; i < results.length; i++) {
+        var tr = table.insertRow(-1);
+
+        var tdRank = tr.insertCell(-1);
+        tdRank.className = 'rank';
+        tdRank.appendChild(document.createTextNode(i + 1));
+
+        var tdInput = tr.insertCell(-1);
+        tdInput.style.backgroundColor = '#' + hex;
+
+        var tdPreview = tr.insertCell(-1);
+        tdPreview.style.backgroundColor = results[i].color.name;
+
+        var tdName = tr.insertCell(-1);
+        tdName.appendChild(document.createTextNode(results[i].color.name));
+
+        var tdHex = tr.insertCell(-1);
+        tdHex.appendChild(document.createTextNode('#'
+                + hexify(results[i].color.red) + hexify(results[i].color.green)
+                + hexify(results[i].color.blue)));
+        tdHex.className = 'hex';
+
+        var tdRgb = tr.insertCell(-1);
+        tdRgb.appendChild(document.createTextNode('rgb(' + results[i].color.red
+                + ',' + results[i].color.green + ',' + results[i].color.blue
+                + ')'));
+        tdRgb.className = 'rgb';
+
+        var tdDiff = tr.insertCell(-1);
+        tdDiff.appendChild(document.createTextNode(results[i].diff));
+    }
+}
+
+function hexify(dec) {
+    var s = dec.toString(16);
+    return (s.length === 1 ? '0' : '') + s;
+}
+
+function sort(A, low, n) {
+    if (low === undefined) {
+        low = 0;
+    }
+    if (n === undefined) {
+        n = A.length - 1;
+    }
+    var lo = low;
+    var hi = n;
+    if (lo >= n) {
+        return;
+    }
+    var mid = A[Math.floor((lo + hi) / 2)].diff;
+    while (lo < hi) {
+        while (lo < hi && A[lo].diff < mid) {
+            lo++;
+        }
+        while (lo < hi && A[hi].diff > mid) {
+            hi--;
+        }
+        if (A[lo].diff === A[hi].diff) {
+            break;
+        }
+        if (lo < hi) {
+            var t = A[lo];
+            A[lo] = A[hi];
+            A[hi] = t;
+        }
+    }
+    if (hi < lo) {
+        var t = hi;
+        hi = lo;
+        lo = t;
+    }
+    sort(A, low, lo);
+    sort(A, lo === low ? lo + 1 : lo, n);
+}
+
+/**
+ * Select all the contents of the given element.
+ */
+function selectAll(e) {
+    if (document.selection) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(e);
+        range.select();
+    } else if (window.getSelection) {
+        var range = document.createRange();
+        range.selectNode(e);
+        window.getSelection().addRange(range);
+    }
+}
+
+input = document.getElementById('code');
+input.focus();
+input.addEventListener('keyup', match);
+
+document.getElementById('results').addEventListener('click', function(evt) {
+    if (evt.target.tagName === 'TD') {
+        selectAll(evt.target);
+    }
+});
+
+});
+</script>
+</head>
+<body>
+
+<div style="margin-bottom: 1em">6-digit hex code: #<input id="code" type="text" size="7" maxlength="6"></div>
+
+<div id="results"></div>
+
+</body>
+</html>
