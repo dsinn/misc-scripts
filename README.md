@@ -93,7 +93,7 @@ This is actually a collection of similar pages, but I don't remember the backsto
 
 ### [NE_lattice.html](https://dsinn.github.io/misc-pages/NE_lattice.html)
 
-* **Purpose:** To show...something about a monotone northeast lattice path (I forgot).
+* **Purpose:** To show...something about a monotone northeast lattice path (I forgor 💀).
 * **Backstory:** I have a maths degree, so this is probably related to one of the courses.
 
 ### [CoinRows.html](https://dsinn.github.io/misc-pages/CoinRows.html)
